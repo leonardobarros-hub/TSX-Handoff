@@ -1,0 +1,582 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Navegação TSX</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: folha de componentes da navegação TSX — coluna larga (1440) porque o header desktop
+   tem 1336 px. Cada seção = Eyebrow + palco vivo + especificação. Visual único claro, com o
+   menu mobile em bg-inverse como no Figma. Tokens = coleção "Collection" do arquivo [TSX] Website. */
+:root{
+  --bg:#F2F2F2;
+  --surface:#FFFFFF;                 /* postcard bg · text-heading inverse */
+  --ink:#2F2D28;                     /* text-heading · bg-button-default */
+  --ink-2:#595753;                   /* text-paragraph */
+  --ink-2a:rgba(89,87,83,.8);        /* text-paragraph 80% */
+  --inverse:#121E28;                 /* bg-inverse */
+  --on-inverse:#FFFFFF;              /* text-heading inverse */
+  --on-inverse-2:rgba(230,230,229,.95); /* text-paragraph inverse */
+  --divider-inverse:#515F6B;         /* divider-inverse */
+  --rule:#C6CED2;                    /* divider (muda no Advisors) */
+  /* por frente (modo Engineering por padrão) */
+  --accent:#BA965C;
+  --list-active:#E5DCCB;
+  --divider:#C6CED2;
+
+  --f-head:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-code:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  /* motion · tudo abaixo de 300 ms; hovers usados o tempo todo não animam */
+  --ease-std:cubic-bezier(.2,0,0,1);   /* ease-out */
+  --t-fade:150ms;                      /* troca de logo e fundo do header mobile */
+  --t-hover:150ms;                     /* 1º hover de um grupo; entre itens vizinhos fica 0 (.is-warm) */
+  --t-btn:250ms;                       /* barra do Button TSX */
+  --t-mm-in:150ms;
+  --t-mm-out:100ms;
+  --t-sheet:260ms;                     /* menu mobile */
+  --t-acc:200ms;                       /* colapso e X do botão */
+  color-scheme:light;
+}
+[data-front="advisors"]{--accent:#0096DC;--list-active:#E0EDF4;--divider:#A9B6BC}
+[data-front="invest"]{--accent:#268E6B;--list-active:#E4F9F2}
+[data-front="partners"]{--accent:#5A7E92;--list-active:#DCE3E7}
+[data-front="group"]{--accent:#005073;--list-active:#D2E6EE}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--f-head);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+.wrap{max-width:1440px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 96px;display:flex;flex-direction:column;gap:80px}
+@media (min-width:720px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
+
+/* ---------- chrome da página ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:600 14px/1.5 var(--f-ui);color:var(--ink)}
+.eyebrow::before{content:"";width:4px;height:18px;background:var(--accent);transition:background-color var(--t-fade)}
+h1,h2,h3{margin:0;font-family:var(--f-head);font-weight:500;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(36px,6vw,56px);line-height:1.15;letter-spacing:-.01em}
+h2{font-size:28px;line-height:1.4}
+h3{font-size:18px;line-height:1.35}
+p{margin:0;color:var(--ink-2);max-width:72ch}
+code{font-family:var(--f-code);font-size:.86em;background:rgba(47,45,40,.06);padding:1px 5px;border-radius:2px;color:var(--ink)}
+.head,.sec__head{display:flex;flex-direction:column;gap:14px}
+.sec{display:flex;flex-direction:column;gap:28px}
+.fronts{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-top:8px}
+.fronts__label{font:600 14px/1.5 var(--f-ui)}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+.seg button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font:400 14px/1.2 var(--f-ui);color:var(--ink-2);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{font:500 14px/1.5 var(--f-ui);color:var(--ink-2)}
+.panel{border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+
+/* ---------- ícones ---------- */
+.ico{display:block;flex:none}
+.chev{width:12px;height:12px}
+
+/* ---------- Button TSX (Default e Light, com a barra que vira fundo) ---------- */
+.tb{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;height:45px;padding:0 16px 0 20px;border-radius:2px;overflow:hidden;font:400 18px/13px var(--f-ui);white-space:nowrap;text-decoration:none;border:0;cursor:pointer;transition:color var(--t-btn) var(--ease-std)}
+.tb::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--accent);clip-path:inset(0 calc(100% - 4px) 0 0);transition:clip-path var(--t-btn) var(--ease-std)}
+.tb:hover::before,.tb:focus-visible::before{clip-path:inset(0 0 0 0)}
+.tb:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.tb--default{background:var(--ink);color:#fff}
+.tb--light{background:var(--surface);color:var(--ink)}
+.tb--light:hover,.tb--light:focus-visible{color:#fff}
+.tb svg{width:11.3px;height:11.3px}
+
+/* ---------- Menu Item ---------- */
+.mi{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:45px;padding:0 12px;margin:0 -2px;border-radius:4px;font:400 18px/13px var(--f-ui);color:var(--ink);white-space:nowrap;background:transparent;transition:background-color var(--t-hover) var(--ease-std)}
+.mi .chev{transition:transform var(--t-hover) var(--ease-std)}
+.mi:hover,.mi.is-hover,.mi.is-open,.mi:focus-visible{background:var(--list-active)}
+/* hover "aquecido": depois do 1º hover, passar direto para o item vizinho não anima */
+.is-warm .mi,.is-warm .mi .chev,.is-warm .mmi{transition:none}
+.mi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mi.is-open .chev{transform:rotate(180deg)}
+.mi--lang{gap:4px}
+.mi--lang .globe{width:24px;height:24px}
+
+/* ---------- Header desktop ---------- */
+.stage-d{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:linear-gradient(180deg,#DCDFE0 0,#E9EAEA 100%)}
+.stage-d__inner{min-width:1120px;padding:24px;min-height:420px;position:relative}
+.hd{position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:32px;height:80px;padding:16px;border-radius:4px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);max-width:1336px;margin:0 auto}
+.hd__logo{display:block;flex:none;height:48px}
+.hd__logo img{height:48px;width:auto;display:block}
+.hd__nav{display:flex;align-items:center;gap:20px}
+.hd__list{display:flex;align-items:center;gap:16px;list-style:none;margin:0;padding:0}
+.stage-d__page{max-width:1336px;margin:32px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;opacity:.55}
+.stage-d__page div{height:120px;border-radius:2px;background:rgba(255,255,255,.55)}
+
+/* ---------- Megamenu ---------- */
+.mm{position:absolute;left:0;right:0;top:calc(100% + 8px);opacity:0;visibility:hidden;transform:translateY(-4px);pointer-events:none;
+  transition:opacity var(--t-mm-out) ease-in,transform var(--t-mm-out) ease-in,visibility 0s linear var(--t-mm-out)}
+.mm.is-open{opacity:1;visibility:visible;transform:none;pointer-events:auto;
+  transition:opacity var(--t-mm-in) var(--ease-std),transform var(--t-mm-in) var(--ease-std),visibility 0s}
+.mmp{display:flex;align-items:flex-start;gap:72px;padding:24px;border-radius:4px;background:var(--surface);box-shadow:0 8px 12px rgba(109,109,109,.10)}
+.mmp__label{flex:none;width:104px;display:inline-flex;align-items:center;gap:8px;font:600 14px/1.5 var(--f-ui);color:var(--ink-2a);text-decoration:none}
+a.mmp__label:hover{color:var(--ink)}
+.mmp__label svg{width:8px;height:8px}
+.mmp__rule{flex:none;width:1px;align-self:stretch;background:var(--divider)}
+.mmp__grid{flex:1;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px;row-gap:16px}
+.mmp__grid--1{grid-template-columns:minmax(0,1fr)}
+.mmp__grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mmp__grid--desc{row-gap:16px}
+/* item do megamenu: no hover vira o "Megamenu item selected" (list-active, padding 8/16, raio 4) */
+.mmi{display:flex;flex-direction:column;gap:8px;padding:8px 16px;margin:-8px -16px;border-radius:4px;text-decoration:none;color:var(--ink);background:transparent;transition:background-color var(--t-hover) var(--ease-std)}
+.mmi:hover,.mmi:focus-visible,.mmi.is-hover{background:var(--list-active)}
+.mmi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mmi__t{display:inline-flex;align-items:center;gap:8px;font:500 16px/1.5 var(--f-head);color:var(--ink)}
+.mmi__d{font:400 14px/1.5 var(--f-ui);color:var(--ink-2a)}
+.mmi__bar{width:3px;height:14px;background:var(--c);flex:none}
+.mmi__flag{width:24px;height:24px;flex:none}
+
+/* ---------- galerias estáticas ---------- */
+.gallery{display:flex;flex-direction:column;gap:20px}
+.gallery__item{display:flex;flex-direction:column;gap:8px}
+.gallery__cap{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.states{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(2,minmax(0,1fr));border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+.states>div{padding:20px;display:flex;align-items:center;min-height:84px;border-bottom:1px solid var(--rule)}
+.states>div:nth-last-child(-n+3){border-bottom:0}
+.states>div:not(:nth-child(3n+1)){border-left:1px solid var(--rule);justify-content:center}
+.states .th{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);min-height:0;background:rgba(47,45,40,.03)}
+.states .nm{flex-direction:column;align-items:flex-start;gap:4px;font:400 14px/1.5 var(--f-ui);color:var(--ink-2)}
+.states .nm b{font:500 16px/1.4 var(--f-head);color:var(--ink)}
+@media (max-width:720px){.states{grid-template-columns:repeat(2,minmax(0,1fr))}.states>div:nth-child(3n+1){grid-column:1/-1;border-left:0}.states .th{display:none}.states>div:not(:nth-child(3n+1)){border-left:0}.states>div:nth-child(3n){border-left:1px solid var(--rule)}}
+.mm-gal{overflow-x:auto}
+.mm-gal .mmp{min-width:900px}
+
+/* ---------- Mobile ---------- */
+.mob{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:900px){.mob{grid-template-columns:minmax(0,1fr)}}
+.phone{position:relative;width:100%;max-width:390px;height:780px;border-radius:24px;overflow:hidden;border:1px solid var(--rule);background:var(--bg);isolation:isolate}
+.phone__page{position:absolute;inset:0;padding:112px 24px 24px;display:flex;flex-direction:column;gap:16px;background:linear-gradient(180deg,#DCDFE0 0,#EEEFEF 60%)}
+.phone__page h4{margin:0;font:500 34px/1.25 var(--f-head);color:var(--ink)}
+.phone__page p{font:400 16px/1.5 var(--f-head)}
+.phone__page .ph{height:180px;border-radius:2px;background:rgba(255,255,255,.6)}
+
+/* Header Mobile */
+.hm{position:absolute;z-index:3;top:16px;left:24px;right:24px;height:64px;padding:8px;display:flex;align-items:center;justify-content:space-between}
+.hm__bg{position:absolute;inset:0;border-radius:4px;background:rgba(255,255,255,.9);
+  transition:background-color var(--t-fade) ease,inset var(--t-sheet) var(--ease-std),border-radius var(--t-sheet) var(--ease-std)}
+.hm__logo{position:relative;height:48px;width:127px;transition:transform var(--t-sheet) var(--ease-std)}
+.hm__logo img{position:absolute;left:0;top:0;height:48px;width:auto;transition:opacity var(--t-fade) ease}
+.hm__logo .inv{opacity:0}
+.burger{all:unset;cursor:pointer;position:relative;width:44px;height:44px;border-radius:2px;background:var(--ink);display:grid;place-items:center;transition:transform var(--t-sheet) var(--ease-std)}
+.burger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.burger__lines{position:relative;width:12px;height:12px}
+.burger__lines span{position:absolute;left:0;width:12px;height:1px;background:var(--on-inverse);transition:transform var(--t-acc) var(--ease-std),opacity var(--t-fade) ease,top var(--t-acc) var(--ease-std)}
+.burger__lines span:nth-child(1){top:0}
+.burger__lines span:nth-child(2){top:5.5px}
+.burger__lines span:nth-child(3){top:11px}
+.is-menu-open .hm__bg{background:var(--inverse);inset:-16px -24px -4px -24px;border-radius:0}
+.is-menu-open .hm__logo{transform:translateX(-8px)}
+.is-menu-open .hm__logo .lt{opacity:0}
+.is-menu-open .hm__logo .inv{opacity:1}
+.is-menu-open .burger{transform:translateX(8px)}
+.is-menu-open .burger__lines span:nth-child(1){top:5.5px;transform:rotate(45deg)}
+.is-menu-open .burger__lines span:nth-child(2){opacity:0}
+.is-menu-open .burger__lines span:nth-child(3){top:5.5px;transform:rotate(-45deg)}
+
+/* Menu de navegação · Mobile */
+.mo{position:absolute;z-index:2;inset:0;background:var(--inverse);overflow-y:auto;overscroll-behavior:contain;
+  clip-path:inset(16px 24px calc(100% - 80px) 24px round 4px);visibility:hidden;
+  transition:clip-path var(--t-sheet) var(--ease-std),visibility 0s linear var(--t-sheet)}
+.is-menu-open .mo{clip-path:inset(0 0 0 0 round 0px);visibility:visible;transition:clip-path var(--t-sheet) var(--ease-std),visibility 0s}
+.mo__body{padding:124px 24px 32px;display:flex;flex-direction:column;gap:24px}
+.mo__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:24px}
+.mo__cta{margin-top:0;width:100%}
+.ml{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;font:400 18px/13px var(--f-ui);color:var(--on-inverse);text-decoration:none}
+.ml:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.ml__l{display:inline-flex;align-items:center;gap:4px}
+.ml .globe{width:24px;height:24px}
+.ml .chev{transition:transform var(--t-acc) var(--ease-std)}
+.ml[aria-expanded="true"] .chev{transform:rotate(180deg)}
+/* colapso */
+.acc{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--t-acc) var(--ease-std)}
+.ml[aria-expanded="true"]+.acc{grid-template-rows:1fr}
+.acc__in{min-height:0;overflow:hidden}
+.sub{position:relative;margin:24px 0 0;padding:0 0 0 11px;list-style:none;display:flex;flex-direction:column;gap:24px}
+.sub::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--divider-inverse);transform:scaleY(0);transform-origin:top;transition:transform var(--t-acc) var(--ease-std)}
+.sub a{display:inline-flex;align-items:center;gap:6px;font:400 18px/13px var(--f-ui);color:var(--on-inverse-2);text-decoration:none}
+.sub a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sub a .bar{width:3px;height:13px;background:var(--c);flex:none}
+.sub a.wrap-l{line-height:1.25}
+.ml[aria-expanded="true"]+.acc .sub::before{transform:scaleY(1)}
+.mob__ctrl{display:flex;flex-wrap:wrap;gap:12px}
+.ctrl{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--rule);border-radius:2px;font:500 14px/1.2 var(--f-ui);color:var(--ink);background:var(--surface)}
+.ctrl:hover{border-color:var(--ink)}
+.ctrl[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ctrl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.slow{--t-fade:600ms;--t-btn:1000ms;--t-mm-in:600ms;--t-mm-out:400ms;--t-sheet:1040ms;--t-acc:800ms}
+
+/* ---------- especificação ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font:400 14.5px/1.5 var(--f-ui);min-width:760px}
+th,td{text-align:left;vertical-align:top;padding:14px 18px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:rgba(47,45,40,.03)}
+td:first-child{font-weight:600;color:var(--ink)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:2px}
+.note{background:var(--surface);padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+.note h3{font-size:17px}
+.note p{font:400 14px/1.55 var(--f-ui)}
+.note__kind{font:600 11px/1.3 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.foot{font:400 13px/1.5 var(--f-ui);color:var(--ink-2);border-top:1px solid var(--rule);padding-top:20px}
+
+@media (prefers-reduced-motion:reduce){
+  :root{--t-fade:1ms;--t-btn:1ms;--t-mm-in:1ms;--t-mm-out:1ms;--t-sheet:1ms;--t-acc:1ms}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chev" viewBox="0 0 12 12"><path d="M1.5 4L6 8.5L10.5 4" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 11.3 11.3"><path d="M0 5.657H11.303M11.303 5.657L5.647 11.314M11.303 5.657L5.647 0" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  <symbol id="i-arrow-s" viewBox="0 0 8 8"><path d="M0 4H8M8 4L4 8M8 4L4 0" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9.4"/><ellipse cx="12" cy="12" rx="4.2" ry="9.4"/><path d="M2.8 9h18.4M2.8 15h18.4"/></g></symbol>
+  <symbol id="f-en" viewBox="0 0 24 24"><rect x="1" y="3" width="22" height="18" rx="2" fill="#fff"/><g fill="#A62842"><rect x="1" y="3" width="22" height="1.4"/><rect x="1" y="5.8" width="22" height="1.4"/><rect x="1" y="8.6" width="22" height="1.4"/><rect x="1" y="11.4" width="22" height="1.4"/><rect x="1" y="14.2" width="22" height="1.4"/><rect x="1" y="17" width="22" height="1.4"/><rect x="1" y="19.6" width="22" height="1.4"/></g><rect x="1" y="3" width="10.5" height="9.8" fill="#102D5E"/></symbol>
+  <symbol id="f-pt" viewBox="0 0 24 24"><rect x="1" y="3" width="22" height="18" rx="2" fill="#459A45"/><path d="M12 5.5L21 12L12 18.5L3 12Z" fill="#FEDF00"/><circle cx="12" cy="12" r="3.9" fill="#0A2172"/><path d="M8.3 11.4c2.6-.6 5.2-.2 7.4 1" stroke="#fff" stroke-width=".9" fill="none"/></symbol>
+  <symbol id="f-es" viewBox="0 0 24 24"><rect x="1" y="3" width="22" height="18" rx="2" fill="#A0251E"/><rect x="1" y="7.5" width="22" height="9" fill="#F1C142"/></symbol>
+</svg>
+
+<div class="wrap" id="root" data-front="engineering">
+
+  <header class="head">
+    <span class="eyebrow">Design System TSX · Componentes</span>
+    <h1>Menu de navegação</h1>
+    <p>Header desktop, Menu Item, Megamenu, Header Mobile e Menu de navegação Mobile, em código e com as interações. Escolha a frente para ver a cor <code>list-active</code>, o <code>accent</code>, o logo e o conteúdo de cada marca.</p>
+    <div class="fronts" role="group" aria-label="Frente">
+      <span class="fronts__label">Frente</span>
+      <div class="seg" id="fronts">
+        <button type="button" data-front="engineering" style="--c:#BA965C" aria-pressed="true"><i></i>Engineering</button>
+        <button type="button" data-front="advisors" style="--c:#0096DC" aria-pressed="false"><i></i>Advisors</button>
+        <button type="button" data-front="invest" style="--c:#268E6B" aria-pressed="false"><i></i>Invest</button>
+        <button type="button" data-front="partners" style="--c:#5A7E92" aria-pressed="false"><i></i>Partners</button>
+        <button type="button" data-front="group" style="--c:#005073" aria-pressed="false"><i></i>Group</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. Header desktop -->
+  <section class="sec" aria-labelledby="s-hd">
+    <div class="sec__head">
+      <span class="eyebrow">Header · desktop</span>
+      <h2 id="s-hd">O item do menu acende e o megamenu desce</h2>
+      <p>Passe o mouse ou use Tab nos itens. Itens com chevron (Serviços, Conteúdos, Unidades de Negócio e PT) abrem o megamenu 8 px abaixo do header. Enquanto o megamenu está aberto, o item que o abriu continua com fundo <code>list-active</code> e o chevron virado para cima. Dentro do megamenu, cada item ganha o mesmo fundo <code>list-active</code> no hover. Só o primeiro hover de cada grupo anima (150 ms); passando direto para o item ao lado, ele acende na hora.</p>
+    </div>
+    <div class="stage-d">
+      <div class="stage-d__inner">
+        <header class="hd" id="hd"></header>
+        <div class="stage-d__page" aria-hidden="true"><div></div><div></div><div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Menu Item -->
+  <section class="sec" aria-labelledby="s-mi">
+    <div class="sec__head">
+      <span class="eyebrow">Menu Item</span>
+      <h2 id="s-mi">Três tipos, dois estados</h2>
+      <p>O texto não se move no hover: o fundo <code>list-active</code> aparece com padding de 12 px e raio de 4 px ao redor dele. O primeiro hover acende em 150 ms. Daí em diante, passar o mouse direto para o item vizinho acende o novo na hora, sem esperar a animação de novo; ao sair da lista, o último item apaga em 150 ms. Teste na coluna Default, que é interativa.</p>
+    </div>
+    <div class="states" id="mi-states"></div>
+  </section>
+
+  <!-- 3. Megamenu -->
+  <section class="sec" aria-labelledby="s-mm">
+    <div class="sec__head">
+      <span class="eyebrow">Megamenu · tipos</span>
+      <h2 id="s-mm">O conteúdo muda com a frente</h2>
+      <p>Painel branco com raio 4, padding 24 e sombra de 12 px. À esquerda, o rótulo da seção em Caption/Default e uma linha <code>divider</code>. À direita, os itens em duas colunas. O primeiro item de cada tipo aparece no estado "Megamenu item selected" para comparar.</p>
+    </div>
+    <div class="gallery" id="mm-gallery"></div>
+  </section>
+
+  <!-- 4. Mobile -->
+  <section class="sec" aria-labelledby="s-mob">
+    <div class="sec__head">
+      <span class="eyebrow">Header Mobile · Menu de navegação Mobile</span>
+      <h2 id="s-mob">O header se expande e vira o menu</h2>
+      <p>Toque no botão do header. O menu escuro cresce a partir do retângulo do header até cobrir a tela. Enquanto isso, o fundo do header escurece e vai até as bordas, o logo troca para a versão negativa e as três linhas do botão viram um X. Os links já estão no lugar e aparecem conforme o menu cresce. Dentro do menu, os itens com chevron abrem e fecham a lista; mais de uma pode ficar aberta.</p>
+    </div>
+    <div class="mob">
+      <div class="phone" id="phone">
+        <div class="phone__page" aria-hidden="true">
+          <h4>Engenharia que entrega resultado</h4>
+          <p>Conteúdo da página por trás do menu.</p>
+          <div class="ph"></div><div class="ph"></div>
+        </div>
+        <div class="hm" id="hm"></div>
+        <nav class="mo" id="mo" aria-label="Menu de navegação"></nav>
+      </div>
+      <div class="sec__head">
+        <div class="mob__ctrl">
+          <button class="ctrl" type="button" id="m-toggle">Abrir menu</button>
+          <button class="ctrl" type="button" id="m-slow" aria-pressed="false">Câmera lenta (4×)</button>
+        </div>
+        <p class="hint">Esc fecha o menu. A câmera lenta vale para todas as interações da página.</p>
+        <div class="tbl-wrap" style="margin-top:8px">
+          <table style="min-width:0">
+            <thead><tr><th>Camada</th><th>Fechado</th><th>Aberto</th></tr></thead>
+            <tbody>
+              <tr><td>Menu (fundo)</td><td>Recortado no retângulo do header (342 × 64, raio 4)</td><td><code>bg-inverse</code> em tela cheia</td></tr>
+              <tr><td>Fundo do header</td><td><code>postcard bg</code> 90%</td><td><code>bg-inverse</code> até as bordas; fica fixo enquanto o menu rola</td></tr>
+              <tr><td>Logo</td><td>Versão clara</td><td>Versão negativa, 8 px à esquerda</td></tr>
+              <tr><td>Botão</td><td>Hamburger · <code>bg-button-default</code></td><td>X, 8 px à direita</td></tr>
+              <tr><td>Links e CTA</td><td>Fora do recorte</td><td>Revelados pelo recorte, sem animação própria</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Motion -->
+  <section class="sec" aria-labelledby="s-motion">
+    <div class="sec__head">
+      <span class="eyebrow">Motion</span>
+      <h2 id="s-motion">Tempos e curvas</h2>
+      <p>Duas regras: nenhuma animação passa de 300 ms, e num grupo de itens (menu, megamenu) só o primeiro hover anima. Quem já está percorrendo o menu passa de um item para o outro sem esperar a animação de novo. O Figma troca as variantes sem animação; estes valores são a referência do código.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Interação</th><th>Gatilho</th><th>O que muda</th><th>Tempo e curva</th></tr></thead>
+        <tbody>
+          <tr><td>Menu Item · hover</td><td>Hover ou foco</td><td>Fundo transparente → <code>list-active</code>. Chevron do item com megamenu gira junto</td><td>1º hover 150 ms · cubic-bezier(.2,0,0,1). Direto para o item vizinho: instantâneo. Ao sair da lista: 150 ms</td></tr>
+          <tr><td>Megamenu · abrir</td><td>Hover ou foco num item com chevron; clique no toque</td><td>Opacidade 0 → 1 e deslocamento −4 px → 0</td><td>150 ms · cubic-bezier(.2,0,0,1)</td></tr>
+          <tr><td>Megamenu · fechar</td><td>Ponteiro sai do header e do painel por 120 ms, Esc ou clique fora</td><td>Opacidade 1 → 0</td><td>100 ms · ease-in</td></tr>
+          <tr><td>Megamenu · trocar de item</td><td>Hover em outro item com chevron</td><td>Só o conteúdo troca; o painel não fecha</td><td>Instantâneo</td></tr>
+          <tr><td>Megamenu item · hover</td><td>Hover ou foco</td><td>Fundo transparente → <code>list-active</code></td><td>1º hover 150 ms. Direto para o item vizinho: instantâneo</td></tr>
+          <tr><td>Fale conosco · hover</td><td>Hover ou foco</td><td>Barra <code>accent</code> de 4 px cresce até virar o fundo</td><td>250 ms · cubic-bezier(.2,0,0,1)</td></tr>
+          <tr><td>Menu mobile · abrir e fechar</td><td>Toque no botão do header; Esc</td><td>Recorte do menu: retângulo do header → tela cheia. Fundo do header escurece, logo troca, hamburger vira X. Links revelados pelo recorte, sem entrada própria</td><td>260 ms · cubic-bezier(.2,0,0,1); logo 150 ms; X 200 ms</td></tr>
+          <tr><td>Colapso · abrir e fechar</td><td>Toque no item com chevron</td><td>Altura 0 → conteúdo, barra <code>divider-inverse</code> desce do topo, chevron gira 180°</td><td>200 ms · cubic-bezier(.2,0,0,1)</td></tr>
+          <tr><td>Movimento reduzido</td><td><code>prefers-reduced-motion</code></td><td>Todas as trocas ficam instantâneas</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6. Notas -->
+  <section class="sec" aria-labelledby="s-notes">
+    <div class="sec__head">
+      <span class="eyebrow">Notas</span>
+      <h2 id="s-notes">Diferenças entre o código e o Figma</h2>
+    </div>
+    <div class="notes">
+      <div class="note"><span class="note__kind">Header</span><h3>Opacidade de 90% no nó inteiro</h3><p>No Figma, o Header e o Header Mobile têm opacidade 0.9 no componente, o que também clareia o texto e o logo. No código, só o fundo fica com 90% (com desfoque atrás). Vale mover a opacidade para o fill no Figma.</p></div>
+      <div class="note"><span class="note__kind">Variantes</span><h3>Menu mobile com modo e nomes trocados</h3><p>As variantes do Menu de navegação · Mobile têm o modo Advisors preso no frame raiz, e as abertas se chamam "Variant10", "Unidade10", "Unidade9", "Unidade8" e "Variant6". Sugestão: Unidade = frente e State = Default/Open.</p></div>
+      <div class="note"><span class="note__kind">Conteúdo</span><h3>Grupo TSX no menu do Advisors</h3><p>No Figma, a lista Grupo TSX aberta do Advisors mostra a própria TSX Advisors e não mostra a Partners. No código, cada frente lista as outras quatro, como no Engineering.</p></div>
+      <div class="note"><span class="note__kind">Ícone</span><h3>Chevron aberto inconsistente</h3><p>Nas variantes abertas, alguns chevrons apontam para cima e outros para baixo (ex.: Serviços no Engineering). No código, todo item aberto gira o chevron 180°.</p></div>
+      <div class="note"><span class="note__kind">Alinhamento</span><h3>8 px entre header e menu</h3><p>O logo e o botão do Header Mobile ficam 8 px para dentro em relação ao topo do menu aberto. A animação desloca os dois 8 px para casar as posições. Se preferir, alinhe no Figma e a animação fica sem deslocamento.</p></div>
+      <div class="note"><span class="note__kind">Megamenu</span><h3>Coluna do rótulo com largura variável</h3><p>No Figma, a coluna do rótulo varia (47 a 77 px), então os itens começam em posições diferentes em cada tipo. No código ela tem 104 px fixos, e todos os tipos alinham.</p></div>
+    </div>
+  </section>
+
+  <p class="foot">Componentes lidos da section "Menu de navegação" (8579:17981) do arquivo [TSX] Website em 18/11/2026. Logos exportados do Figma.</p>
+</div>
+
+<script>
+(function(){
+  var FRONTS={
+    engineering:{name:'Engineering',accent:'#BA965C',cta:'Fale conosco',
+      desktop:[['Sobre nós'],['Serviços','servicos'],['Projetos'],['Conteúdos','conteudos'],['Trabalhe conosco']],
+      mobile:[['Sobre nós'],['Serviços','servicos'],['Projetos'],['Conteúdo','conteudos'],['Trabalhe conosco'],['Grupo TSX','grupo'],['PT','idioma']],
+      services:['Custos','Planejamento','Suprimentos','Gerenciamento','Prevenção e Defesa de Pleitos','Business Inteligence','Coordenação de BIM','Análise de Riscos','Avaliação de Maturidade']},
+    advisors:{name:'Advisors',accent:'#0096DC',cta:'Fale conosco',
+      desktop:[['Sobre nós'],['Serviços','servicos'],['Projetos'],['Conteúdos','conteudos'],['Trabalhe conosco']],
+      mobile:[['Sobre nós'],['Serviços','servicos'],['Projetos'],['Conteúdo','conteudos'],['Trabalhe conosco'],['Grupo TSX','grupo'],['PT','idioma']],
+      services:['Planejamento tributário','Gestão de contratos','Benefícios e regimes especiais','Diligenciamento de fornecedores','Importação de ativos','Gestão logística nacional e internacional','Modelagem de contratos','Policy Advocacy fiscal e regulatório','Suprimentos e equalização','Gestão de riscos e seguros']},
+    invest:{name:'Invest',accent:'#268E6B',cta:'Fale conosco',
+      desktop:[['Sobre nós'],['Serviços','servicos'],['Projetos'],['Conteúdos','conteudos'],['Trabalhe conosco']],
+      mobile:[['Sobre nós'],['Serviços','servicos'],['Projetos'],['Conteúdo','conteudos'],['Trabalhe conosco'],['Grupo TSX','grupo'],['PT','idioma']],
+      services:['Synaptic','Bússola','IPA (Agência de Promoção de Investimentos e Diversificação Econômica)'],servicesCols:1},
+    partners:{name:'Partners',accent:'#5A7E92',cta:'Fale conosco',
+      desktop:[['Sobre nós'],['O que fazemos'],['Conteúdos','conteudos'],['Trabalhe conosco']],
+      mobile:[['Sobre nós'],['O que fazemos'],['Conteúdo','conteudos'],['Trabalhe conosco'],['Grupo TSX','grupo'],['PT','idioma']]},
+    group:{name:'Group',accent:'#005073',cta:'Saiba mais',
+      desktop:[['Sobre nós'],['Unidades de Negócio','unidades'],['Conteúdos','conteudos'],['Trabalhe conosco']],
+      mobile:[['Sobre nós'],['Projetos'],['Conteúdo','conteudos'],['Trabalhe conosco'],['Grupo TSX','grupo'],['PT','idioma']]}
+  };
+  var ORDER=['engineering','advisors','invest','partners','group'];
+  var root=document.getElementById('root');
+  var front='engineering';
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function use(id,cls,w,h){return '<svg class="ico '+(cls||'')+'" width="'+(w||12)+'" height="'+(h||12)+'" aria-hidden="true"><use href="#'+id+'"/></svg>'}
+  var CHEV=use('i-chev','chev');
+  var GLOBE=use('i-globe','globe',24,24);
+  var ARROW='<svg class="ico" width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg>';
+  function logo(f,inv){return 'nav/logo-'+f+(inv?'-inverse':'')+'.svg'}
+
+  /* ----- conteúdo dos megamenus ----- */
+  function others(f){return ORDER.filter(function(x){return x!==f})}
+  function mmData(key,f){
+    var F=FRONTS[f];
+    if(key==='servicos') return {label:'Serviços',link:true,cols:F.servicesCols||2,items:(F.services||[]).map(function(t){return {t:t}})};
+    if(key==='conteudos') return {label:'Conteúdos',cols:2,desc:true,items:[
+      {t:'Notícias',d:'Conheça as novidades de atuação da TSX '+F.name+'.'},
+      {t:'Blog',d:'Fique por dentro do mercado de engenharia, nossos estudos e visão.'}]};
+    if(key==='idioma') return {label:'Idioma',cols:3,items:[{t:'Inglês',flag:'f-en'},{t:'Português',flag:'f-pt'},{t:'Espanhol',flag:'f-es'}]};
+    if(key==='unidades'||key==='grupo') return {label:'Grupo TSX',cols:2,items:(key==='unidades'?['engineering','invest','advisors','partners']:others(f)).map(function(x){return {t:'TSX '+FRONTS[x].name,c:FRONTS[x].accent}})};
+  }
+  function mmPanel(d,selFirst){
+    var label=d.link?'<a class="mmp__label" href="#s-hd">'+esc(d.label)+'<svg class="ico" width="8" height="8" aria-hidden="true"><use href="#i-arrow-s"/></svg></a>':'<span class="mmp__label">'+esc(d.label)+'</span>';
+    var items=d.items.map(function(it,i){
+      var t='<span class="mmi__t">'+(it.c?'<span class="mmi__bar" style="--c:'+it.c+'"></span>':'')+(it.flag?use(it.flag,'mmi__flag',24,24):'')+esc(it.t)+'</span>';
+      return '<a class="mmi'+(selFirst&&i===0?' is-hover':'')+'" href="#s-hd">'+t+(it.d?'<span class="mmi__d">'+esc(it.d)+'</span>':'')+'</a>';
+    }).join('');
+    return '<div class="mmp">'+label+'<span class="mmp__rule" aria-hidden="true"></span><div class="mmp__grid mmp__grid--'+d.cols+(d.desc?' mmp__grid--desc':'')+'">'+items+'</div></div>';
+  }
+
+  /* ----- header desktop ----- */
+  var hd=document.getElementById('hd'), openKey=null, closeT=null;
+  function renderHeader(){
+    var F=FRONTS[front];
+    var items=F.desktop.map(function(it){
+      return it[1]
+        ?'<li><button type="button" class="mi" data-mm="'+it[1]+'" aria-expanded="false" aria-controls="mm">'+esc(it[0])+CHEV+'</button></li>'
+        :'<li><a class="mi" href="#s-hd">'+esc(it[0])+'</a></li>';
+    }).join('');
+    items+='<li><button type="button" class="mi mi--lang" data-mm="idioma" aria-expanded="false" aria-controls="mm" aria-label="Idioma: português">'+GLOBE+'PT'+CHEV+'</button></li>';
+    hd.innerHTML='<a class="hd__logo" href="#s-hd"><img src="'+logo(front)+'" alt="TSX '+F.name+'"></a>'
+      +'<nav class="hd__nav" aria-label="Principal"><ul class="hd__list">'+items+'</ul>'
+      +'<a class="tb tb--default" href="#s-hd">'+esc(F.cta)+ARROW+'</a></nav>'
+      +'<div class="mm" id="mm" role="region" aria-label="Megamenu"></div>';
+    openKey=null;
+    warmGroup(hd.querySelector('.hd__list'),'.mi');
+    warmGroup(document.getElementById('mm'),'.mmi');
+  }
+  /* Grupo "aquecido": o 1º hover anima; passar de um item direto para outro do mesmo grupo é instantâneo.
+     Ao sair do grupo (mouse ou foco), o grupo esfria e o último item apaga com animação. */
+  function warmGroup(el,sel){
+    if(!el)return;
+    var last=null;
+    function enter(e){var it=e.target.closest(sel);if(!it||!el.contains(it))return;if(last&&it!==last)el.classList.add('is-warm');last=it}
+    el.addEventListener('mouseover',enter);
+    el.addEventListener('focusin',enter);
+    el.addEventListener('mouseleave',function(){el.classList.remove('is-warm');last=null});
+    el.addEventListener('focusout',function(e){if(!el.contains(e.relatedTarget)){el.classList.remove('is-warm');last=null}});
+  }
+  function openMM(key,btn){
+    clearTimeout(closeT);
+    var mm=document.getElementById('mm');
+    if(openKey!==key){mm.innerHTML=mmPanel(mmData(key,front));openKey=key}
+    hd.querySelectorAll('[data-mm]').forEach(function(b){var on=b===btn;b.classList.toggle('is-open',on);b.setAttribute('aria-expanded',on?'true':'false')});
+    mm.classList.add('is-open');
+  }
+  function closeMM(now){
+    clearTimeout(closeT);
+    var go=function(){var mm=document.getElementById('mm');if(!mm)return;mm.classList.remove('is-open');openKey=null;
+      hd.querySelectorAll('[data-mm]').forEach(function(b){b.classList.remove('is-open');b.setAttribute('aria-expanded','false')})};
+    if(now)go();else closeT=setTimeout(go,120);
+  }
+  hd.addEventListener('mouseover',function(e){
+    var b=e.target.closest('[data-mm]');
+    if(b){openMM(b.dataset.mm,b);return}
+    if(e.target.closest('.mi')&&!e.target.closest('[data-mm]'))closeMM(false);
+    if(e.target.closest('#mm'))clearTimeout(closeT);
+  });
+  hd.addEventListener('mouseleave',function(){closeMM(false)});
+  hd.addEventListener('focusin',function(e){var b=e.target.closest('[data-mm]');if(b)openMM(b.dataset.mm,b);else if(!e.target.closest('#mm'))closeMM(true)});
+  hd.addEventListener('focusout',function(e){if(!hd.contains(e.relatedTarget))closeMM(true)});
+  hd.addEventListener('click',function(e){
+    var b=e.target.closest('[data-mm]');
+    if(b){e.preventDefault();if(b.classList.contains('is-open')&&e.detail>0&&matchMedia('(hover: none)').matches)closeMM(true);else openMM(b.dataset.mm,b);return}
+    if(e.target.closest('a'))e.preventDefault();
+  });
+  document.addEventListener('click',function(e){if(!hd.contains(e.target))closeMM(true)});
+
+  /* ----- Menu Item: estados ----- */
+  function renderStates(){
+    var types=[['Default','Só texto','Menu Item',''],['Default w/ icon','Abre megamenu','Menu Item',CHEV],['Default w/ 2 icons','Idioma','Menu Item',CHEV,true]];
+    var html='<div class="th">Tipo</div><div class="th">Default (interativo)</div><div class="th">Hover</div>';
+    types.forEach(function(t){
+      var inner=(t[4]?GLOBE:'')+esc(t[2])+t[3];
+      var cls='mi'+(t[4]?' mi--lang':'');
+      html+='<div class="nm"><b>'+t[0]+'</b>'+t[1]+'</div><div><button type="button" class="'+cls+'">'+inner+'</button></div><div><span class="'+cls+' is-hover" aria-hidden="true">'+inner+'</span></div>';
+    });
+    var st=document.getElementById('mi-states');
+    st.innerHTML=html;
+    warmGroup(st,'.mi');
+  }
+
+  /* ----- galeria de megamenus ----- */
+  function renderGallery(){
+    var F=FRONTS[front], keys=[];
+    F.desktop.forEach(function(it){if(it[1])keys.push([it[1],it[0]])});
+    keys.push(['idioma','PT']);
+    if(front!=='group')keys.push(['unidades','Unidades de Negócio (Group)']);
+    document.getElementById('mm-gallery').innerHTML=keys.map(function(k){
+      return '<div class="gallery__item"><span class="gallery__cap">'+esc(k[1])+'</span><div class="mm-gal">'+mmPanel(mmData(k[0],front),true)+'</div></div>';
+    }).join('');
+    document.querySelectorAll('#mm-gallery .mmp__grid').forEach(function(g){warmGroup(g,'.mmi')});
+  }
+
+  /* ----- mobile ----- */
+  var phone=document.getElementById('phone'), hm=document.getElementById('hm'), mo=document.getElementById('mo'), toggle=document.getElementById('m-toggle');
+  function subList(key){
+    var d=mmData(key,front);
+    if(key==='idioma') d={items:[{t:'Inglês'},{t:'Espanhol'}]};
+    return '<ul class="sub">'+d.items.map(function(it){return '<li><a href="#s-mob" tabindex="-1"'+(it.t.length>34?' class="wrap-l"':'')+'>'+(it.c?'<span class="bar" style="--c:'+it.c+'"></span>':'')+esc(it.t)+'</a></li>'}).join('')+'</ul>';
+  }
+  function renderMobile(){
+    var F=FRONTS[front];
+    hm.innerHTML='<span class="hm__bg" aria-hidden="true"></span>'
+      +'<a class="hm__logo" href="#s-mob" aria-label="TSX '+F.name+'"><img class="lt" src="'+logo(front)+'" alt=""><img class="inv" src="'+logo(front,true)+'" alt=""></a>'
+      +'<button type="button" class="burger" id="burger" aria-expanded="false" aria-controls="mo" aria-label="Abrir menu"><span class="burger__lines" aria-hidden="true"><span></span><span></span><span></span></span></button>';
+    var i=0;
+    var list=F.mobile.map(function(it){
+      var n=i++;
+      if(!it[1])return '<li style="--i:'+n+'"><a class="ml" href="#s-mob">'+esc(it[0])+'</a></li>';
+      var label=it[1]==='idioma'?'<span class="ml__l">'+GLOBE+'PT</span>':'<span>'+esc(it[0])+'</span>';
+      var id='acc-'+it[1];
+      return '<li style="--i:'+n+'"><button type="button" class="ml" aria-expanded="false" aria-controls="'+id+'">'+label+CHEV+'</button><div class="acc" id="'+id+'"><div class="acc__in">'+subList(it[1])+'</div></div></li>';
+    }).join('');
+    mo.innerHTML='<div class="mo__body"><ul class="mo__list">'+list+'</ul><a class="tb tb--light mo__cta" style="--i:'+i+'" href="#s-mob">'+esc(F.cta)+ARROW+'</a></div>';
+    setMenu(false,true);
+  }
+  function setMenu(open,silent){
+    phone.classList.toggle('is-menu-open',open);
+    var b=document.getElementById('burger');
+    if(b){b.setAttribute('aria-expanded',open?'true':'false');b.setAttribute('aria-label',open?'Fechar menu':'Abrir menu')}
+    toggle.textContent=open?'Fechar menu':'Abrir menu';
+    mo.toggleAttribute('inert',!open);
+    if(!open&&!silent&&b)b.focus({preventScroll:true});
+  }
+  hm.addEventListener('click',function(e){
+    if(e.target.closest('#burger'))setMenu(!phone.classList.contains('is-menu-open'));
+    else if(e.target.closest('a'))e.preventDefault();
+  });
+  toggle.addEventListener('click',function(){setMenu(!phone.classList.contains('is-menu-open'),true)});
+  mo.addEventListener('click',function(e){
+    var b=e.target.closest('button.ml');
+    if(b){var on=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',on?'true':'false');
+      b.nextElementSibling.querySelectorAll('.sub a').forEach(function(a){a.tabIndex=on?0:-1});return}
+    if(e.target.closest('a'))e.preventDefault();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape')return;
+    if(phone.classList.contains('is-menu-open'))setMenu(false);
+    closeMM(true);
+  });
+  document.getElementById('m-slow').addEventListener('click',function(){
+    var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on?'true':'false');root.classList.toggle('slow',on);
+  });
+
+  /* ----- troca de frente ----- */
+  var seg=document.getElementById('fronts');
+  function setFront(f){
+    front=f;root.setAttribute('data-front',f);
+    seg.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.front===f?'true':'false')});
+    renderHeader();renderGallery();renderMobile();
+    try{localStorage.setItem('tsx-nav-front',f)}catch(e){}
+  }
+  seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)setFront(b.dataset.front)});
+  renderStates();
+  var saved=null;try{saved=localStorage.getItem('tsx-nav-front')}catch(e){}
+  setFront(FRONTS[saved]?saved:'engineering');
+})();
+</script>
+
+</body></html>

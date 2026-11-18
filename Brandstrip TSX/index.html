@@ -1,0 +1,219 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Brandstrip TSX</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: folha do componente Brandstrip do design system TSX — coluna de 1440 px, o componente
+   aparece em largura real (1422) dentro de um palco. Visual único claro, fundo bg da marca. */
+:root{
+  --bg:#F2F2F2;
+  --surface:#FFFFFF;
+  --ink:#2F2D28;
+  --ink-2:#595753;
+  --rule:#C6CED2;
+  --accent:#BA965C;
+  --f-head:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-code:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+[data-front="advisors"],[data-front="frente5"]{--accent:#0096DC}
+[data-front="invest"]{--accent:#268E6B}
+[data-front="partners"]{--accent:#5A7E92}
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--f-head);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 96px;display:flex;flex-direction:column;gap:72px}
+@media (min-width:720px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:600 14px/1.5 var(--f-ui);color:var(--ink)}
+.eyebrow::before{content:"";width:4px;height:18px;background:var(--accent)}
+h1,h2,h3{margin:0;font-family:var(--f-head);font-weight:500;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(36px,6vw,56px);line-height:1.15;letter-spacing:-.01em}
+h2{font-size:28px;line-height:1.4}
+h3{font-size:17px;line-height:1.35}
+p{margin:0;color:var(--ink-2);max-width:72ch}
+code{font-family:var(--f-code);font-size:.86em;background:rgba(47,45,40,.06);padding:1px 5px;border-radius:2px;color:var(--ink)}
+.head,.sec__head{display:flex;flex-direction:column;gap:14px}
+.sec{display:flex;flex-direction:column;gap:28px}
+.fronts{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-top:8px}
+.fronts__label{font:600 14px/1.5 var(--f-ui)}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+.seg button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font:400 14px/1.2 var(--f-ui);color:var(--ink-2);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- Brandstrip ---------- */
+.stage{border:1px solid var(--rule);border-radius:2px;background:#E4E6E6;padding:24px;overflow:hidden}
+.bs{
+  --gap:35px;
+  --speed:40;                 /* px por segundo */
+  max-width:1422px;margin:0 auto;background:var(--bg);
+  padding-block:40px;padding-inline:clamp(16px,4.5vw,64px);
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+}
+.bs__label{display:inline-flex;align-items:center;gap:3px;font:600 14px/1.5 var(--f-ui);color:var(--ink);margin:0}
+.bs__label::before{content:"";width:2px;height:14px;background:var(--accent)}
+.bs__viewport{
+  position:relative;width:100%;max-width:1294px;overflow:hidden;
+  /* bordas somem no fundo: 12% de cada lado, como o degradê do Figma */
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+}
+.bs__track{display:flex;width:max-content;animation:bs-loop var(--dur,40s) linear infinite}
+.bs__group{display:flex;align-items:center;gap:var(--gap);padding-right:var(--gap);height:56px;list-style:none;margin:0;padding-left:0}
+.bs__group li{flex:none;display:flex;align-items:center}
+.bs__group img{display:block;width:auto;max-width:none}
+@keyframes bs-loop{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* pausa só pelo botão: o hover não interrompe o loop */
+.bs.is-paused .bs__track{animation-play-state:paused}
+.bs__toggle{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--f-ui);color:var(--ink-2);padding:6px 8px;border-radius:2px}
+.bs__toggle:hover{color:var(--ink);background:rgba(47,45,40,.06)}
+.bs__toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.bs__toggle svg{width:10px;height:10px}
+@media (prefers-reduced-motion:reduce){
+  .bs__track{animation:none;width:100%}
+  .bs__group{flex-wrap:wrap;justify-content:center;height:auto;row-gap:24px;padding-right:0;width:100%}
+  .bs__group[aria-hidden="true"],.bs__toggle{display:none}
+  .bs__viewport{-webkit-mask-image:none;mask-image:none}
+}
+
+/* tabelas e notas */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font:400 14.5px/1.5 var(--f-ui);min-width:760px}
+th,td{text-align:left;vertical-align:top;padding:14px 18px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:rgba(47,45,40,.03)}
+td:first-child{font-weight:600;color:var(--ink)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:2px}
+.note{background:var(--surface);padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+.note p{font:400 14px/1.55 var(--f-ui)}
+.note__kind{font:600 11px/1.3 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.foot{font:400 13px/1.5 var(--f-ui);color:var(--ink-2);border-top:1px solid var(--rule);padding-top:20px}
+</style>
+
+<div class="wrap" id="root" data-front="engineering">
+  <header class="head">
+    <span class="eyebrow">Design System TSX · Componentes</span>
+    <h1>Brandstrip</h1>
+    <p>Faixa de logos de clientes que passa em loop contínuo, da direita para a esquerda, logo abaixo do hero. Cada frente tem o seu conjunto de logos e o seu tom.</p>
+    <div class="fronts" role="group" aria-label="Variante">
+      <span class="fronts__label">Variante</span>
+      <div class="seg" id="fronts">
+        <button type="button" data-front="engineering" style="--c:#BA965C" aria-pressed="true"><i></i>Engineering</button>
+        <button type="button" data-front="advisors" style="--c:#0096DC" aria-pressed="false"><i></i>Advisors</button>
+        <button type="button" data-front="invest" style="--c:#268E6B" aria-pressed="false"><i></i>Invest</button>
+        <button type="button" data-front="partners" style="--c:#5A7E92" aria-pressed="false"><i></i>Partners</button>
+        <button type="button" data-front="frente5" style="--c:#0096DC" aria-pressed="false"><i></i>Frente5</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec" aria-labelledby="s-live">
+    <div class="sec__head">
+      <span class="eyebrow">Interação · loop</span>
+      <h2 id="s-live">Os logos passam sem parar e sem emenda</h2>
+      <p>A lista de logos aparece duas vezes, uma atrás da outra. A faixa anda para a esquerda a 40 px por segundo e, quando a primeira cópia sai inteira, volta ao início sem salto, porque a segunda cópia está exatamente no lugar dela. As bordas somem no fundo nos 12% de cada lado. Passar o mouse sobre a faixa não interrompe o loop; só o botão Pausar para o movimento. Com movimento reduzido ligado no sistema, os logos ficam parados, quebrando em linhas.</p>
+    </div>
+    <div class="stage">
+      <section class="bs" id="bs" aria-label="Clientes">
+        <p class="bs__label" id="bs-label">Nossos clientes</p>
+        <div class="bs__viewport"><div class="bs__track" id="bs-track"></div></div>
+        <button class="bs__toggle" type="button" id="bs-toggle" aria-pressed="false"></button>
+      </section>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s-spec">
+    <div class="sec__head">
+      <span class="eyebrow">Especificação</span>
+      <h2 id="s-spec">Medidas e motion</h2>
+      <p>O loop é um movimento contínuo de fundo, não uma transição de interface, então o limite de 300 ms não se aplica. A velocidade é baixa para os logos serem lidos, e o loop pode ser pausado, como pede a WCAG para conteúdo que se move por mais de 5 segundos.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Valor</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Container</td><td>Fundo <code>bg</code> #F2F2F2 · padding 40/64 · gap 16 · largura 1422</td><td>Centralizado</td></tr>
+          <tr><td>Rótulo</td><td>Caption/Default · <code>text-heading</code> #2F2D28 · barra <code>accent</code> 2 × 14, gap 3</td><td>"Nossos clientes"</td></tr>
+          <tr><td>Faixa</td><td>Até 1294 px de largura · 56 px de altura · logos com 35 px entre si</td><td>Cada logo na altura do Figma (27 a 56 px), centralizado na faixa</td></tr>
+          <tr><td>Bordas</td><td>Máscara de 0 → 100% nos primeiros 12% e 100% → 0 nos últimos 12%</td><td>No Figma, um retângulo com degradê <code>bg</code> por cima</td></tr>
+          <tr><td>Movimento</td><td>translateX de 0 a −50% da trilha (duas cópias da lista) · linear · infinito</td><td>Duração = largura de uma cópia ÷ 40 px/s (cerca de 70 s no Engineering, 16 logos)</td></tr>
+          <tr><td>Pausa</td><td>Só pelo botão Pausar/Continuar. O hover não para o loop</td><td>A segunda cópia é <code>aria-hidden</code> e não é lida duas vezes</td></tr>
+          <tr><td>Movimento reduzido</td><td><code>prefers-reduced-motion</code>: sem animação, logos em linhas</td><td>Sem máscara nas bordas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s-notes">
+    <div class="sec__head">
+      <span class="eyebrow">Notas</span>
+      <h2 id="s-notes">Diferenças entre o código e o Figma</h2>
+    </div>
+    <div class="notes">
+      <div class="note"><span class="note__kind">Texto</span><h3>"Nossos perceiros" na Partners</h3><p>O rótulo da variante Partners está com erro de digitação. No código, ele aparece como "Nossos parceiros".</p></div>
+      <div class="note"><span class="note__kind">Variantes</span><h3>Frente5 sem nome e modos trocados</h3><p>A quinta variante se chama "Frente5" e não diz de qual frente é. Advisors, Invest e Frente5 têm o modo Advisors preso; a Invest deveria usar o modo Invest. No código, a barra do rótulo da Invest é verde.</p></div>
+      <div class="note"><span class="note__kind">Conteúdo</span><h3>Logos escondidos fora do recorte</h3><p>No Engineering, 7 dos 16 logos ficam além da largura da faixa e nunca aparecem no Figma. Com o loop, todos passam. Na Frente5, Bamin e Vale estão escondidos; no código, entram na lista.</p></div>
+      <div class="note"><span class="note__kind">Acessibilidade</span><h3>Botão de pausa</h3><p>O Figma não tem controle de pausa. O código traz um botão discreto abaixo da faixa, porque conteúdo que se move por mais de 5 segundos precisa poder ser parado.</p></div>
+    </div>
+  </section>
+
+  <p class="foot">Componente lido do component set "Brandstrip" (9771:3866) do arquivo [TSX] Website em 18/11/2026. Logos exportados do Figma.</p>
+</div>
+
+<script>
+(function(){
+  var DATA={
+    engineering:{label:'Nossos clientes',logos:[['engineering-01-allied-graphite.png',45,'Allied Graphite'],['engineering-02-atlas-lithium.svg',53,'Atlas Lithium'],['engineering-03-amg.svg',49,'AMG'],['engineering-04-appian-capital.svg',40,'Appian Capital Advisory'],['engineering-05-ero-copper.svg',30,'Ero Copper'],['engineering-06-bamin.svg',27,'Bamin'],['engineering-07-vale.svg',39,'Vale'],['engineering-08-sigma-lithium.svg',55,'Sigma Lithium'],['engineering-09-itaminas.svg',50,'Itaminas'],['engineering-10-mineracao-vale-verde.svg',55,'Mineração Vale Verde'],['engineering-11-oz-minerals.svg',55,'OZ Minerals'],['engineering-12-ultracargo.svg',55,'Ultracargo'],['engineering-13-fundacao-renova-marca-rgb-1.svg',54,'Fundação Renova'],['engineering-14-frame.svg',31,'Cliente'],['engineering-15-image.svg',55,'Cliente'],['engineering-16-image.svg',55,'Cliente']]},
+    advisors:{label:'Nossos clientes',logos:[['advisors-01-gerdau-logo.svg',39,'Gerdau'],['advisors-02-amg.svg',49,'AMG'],['advisors-03-bh-airport-logo.svg',50,'BH Airport'],['advisors-04-companhia-siderurgica-nacional-logo.svg',47,'CSN'],['advisors-05-logotipo-da-samarco.svg',39,'Samarco'],['advisors-06-ero-copper.svg',30,'Ero Copper'],['advisors-07-bamin.svg',27,'Bamin'],['advisors-08-vale.svg',39,'Vale']]},
+    invest:{label:'Nossos clientes',logos:[['invest-01-gerdau-logo.svg',39,'Gerdau'],['invest-02-amg.svg',49,'AMG'],['invest-03-bh-airport-logo.svg',50,'BH Airport'],['invest-04-companhia-siderurgica-nacional-logo.svg',47,'CSN'],['invest-05-logotipo-da-samarco.svg',39,'Samarco'],['invest-06-ero-copper.svg',30,'Ero Copper'],['invest-07-bamin.svg',27,'Bamin'],['invest-08-vale.svg',39,'Vale']]},
+    partners:{label:'Nossos parceiros',logos:[['partners-01-allied-graphite.png',32,'Allied Graphite'],['partners-02-atlas-lithium.svg',53,'Atlas Lithium'],['partners-03-amg.svg',49,'AMG'],['partners-04-appian-capital.svg',40,'Appian Capital Advisory'],['partners-05-ero-copper.svg',30,'Ero Copper'],['partners-06-bamin.svg',27,'Bamin'],['partners-07-vale.svg',39,'Vale'],['partners-08-sigma-lithium.svg',55,'Sigma Lithium'],['partners-09-itaminas.svg',50,'Itaminas']]},
+    frente5:{label:'Nossos clientes',logos:[['frente5-01-bamin.svg',21,'Bamin'],['frente5-02-vale.svg',29,'Vale'],['frente5-03-sigma-lithium.svg',42,'Sigma Lithium'],['frente5-04-image.png',42,'Viridis Mining & Minerals'],['frente5-05-image.svg',46,'Nelson Wilians Advogados'],['frente5-06-image.svg',56,'CDL Pará de Minas'],['frente5-07-image.svg',32,'Ascipam'],['frente5-08-image.svg',35,'CDL Sete Lagoas'],['frente5-09-image.png',27,'Sicredi'],['frente5-10-image.svg',32,'ACI Sete Lagoas'],['frente5-11-image.svg',37,'CDL Belo Horizonte'],['frente5-12-mineracao-vale-verde.svg',39,'Mineração Vale Verde'],['frente5-13-image.png',48,'Cliente'],['frente5-14-image.svg',17,'Cliente']]}
+  };
+  var SPEED=40;
+  var root=document.getElementById('root'), bs=document.getElementById('bs'), track=document.getElementById('bs-track');
+  var label=document.getElementById('bs-label'), toggle=document.getElementById('bs-toggle');
+  var PAUSE='<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z" fill="currentColor"/></svg>Pausar';
+  var PLAY='<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg>Continuar';
+
+  function group(list,hidden){
+    return '<ul class="bs__group"'+(hidden?' aria-hidden="true"':'')+'>'+list.map(function(l){
+      return '<li><img src="brandstrip/'+l[0]+'" height="'+l[1]+'" style="height:'+l[1]+'px" alt="'+(hidden?'':l[2])+'" loading="eager"></li>';
+    }).join('')+'</ul>';
+  }
+  function setDuration(){
+    var g=track.querySelector('.bs__group'); if(!g)return;
+    var w=g.getBoundingClientRect().width;
+    if(w>0) track.style.setProperty('--dur',(w/SPEED).toFixed(1)+'s');
+  }
+  function render(f){
+    var d=DATA[f];
+    label.textContent=d.label;
+    track.innerHTML=group(d.logos,false)+group(d.logos,true);
+    track.style.animation='none'; void track.offsetWidth; track.style.animation='';
+    var imgs=track.querySelectorAll('img'), left=imgs.length;
+    imgs.forEach(function(im){ if(im.complete){if(--left===0)setDuration()} else im.addEventListener('load',function(){if(--left===0)setDuration()},{once:true}) });
+    setDuration();
+  }
+  function setPaused(p){bs.classList.toggle('is-paused',p);toggle.setAttribute('aria-pressed',p?'true':'false');toggle.innerHTML=p?PLAY:PAUSE}
+  toggle.addEventListener('click',function(){setPaused(!bs.classList.contains('is-paused'))});
+  setPaused(false);
+  var seg=document.getElementById('fronts');
+  function setFront(f){
+    root.setAttribute('data-front',f);
+    seg.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.front===f?'true':'false')});
+    render(f);
+    try{localStorage.setItem('tsx-bs-front',f)}catch(e){}
+  }
+  seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)setFront(b.dataset.front)});
+  window.addEventListener('resize',setDuration);
+  var saved=null;try{saved=localStorage.getItem('tsx-bs-front')}catch(e){}
+  setFront(DATA[saved]?saved:'engineering');
+})();
+</script>
+
+</body></html>

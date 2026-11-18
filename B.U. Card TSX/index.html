@@ -1,0 +1,208 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>B.U. Card TSX</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: folha do componente B.U. Card do design system TSX — coluna de 1440 px para caber
+   os 5 cards de 322 px lado a lado. Visual único claro (fundo bg da marca). */
+:root{
+  --bg:#F2F2F2;
+  --surface:#FFFFFF;
+  --ink:#2F2D28;
+  --ink-2:#595753;
+  --rule:#C6CED2;
+  --on-card:#FFFFFF;                  /* text-heading inverse */
+  --on-card-2:rgba(230,230,229,.95);  /* text-paragraph inverse */
+  --accent:#BA965C;                   /* a página usa o modo Engineering */
+
+  --f-head:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-code:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  /* motion: abaixo de 300 ms, ease-out */
+  --ease-out:cubic-bezier(.2,0,0,1);
+  --t-card:250ms;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--f-head);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 96px;display:flex;flex-direction:column;gap:80px}
+@media (min-width:720px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:600 14px/1.5 var(--f-ui);color:var(--ink)}
+.eyebrow::before{content:"";width:4px;height:18px;background:var(--accent)}
+h1,h2,h3{margin:0;font-family:var(--f-head);font-weight:500;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(36px,6vw,56px);line-height:1.15;letter-spacing:-.01em}
+h2{font-size:28px;line-height:1.4}
+h3{font-size:17px;line-height:1.35}
+p{margin:0;color:var(--ink-2);max-width:72ch}
+code{font-family:var(--f-code);font-size:.86em;background:rgba(47,45,40,.06);padding:1px 5px;border-radius:2px;color:var(--ink)}
+.head,.sec__head{display:flex;flex-direction:column;gap:14px}
+.sec{display:flex;flex-direction:column;gap:28px}
+.ctrls{display:flex;flex-wrap:wrap;gap:12px}
+.ctrl{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--rule);border-radius:2px;font:500 14px/1.2 var(--f-ui);color:var(--ink);background:var(--surface)}
+.ctrl:hover{border-color:var(--ink)}
+.ctrl[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ctrl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- B.U. Card ---------- */
+.bu{
+  --c:var(--accent);
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;
+  width:100%;max-width:322px;aspect-ratio:322/394;min-height:340px;padding:24px;
+  border-radius:4px;background:var(--c);color:var(--on-card);text-decoration:none;
+  /* canto superior direito cortado: triângulo de 35 × 39 px */
+  clip-path:polygon(0 0,calc(100% - 35px) 0,100% 39px,100% 100%,0 100%);
+}
+.bu::before{ /* foto com o filtro da frente, revelada no hover */
+  content:"";position:absolute;inset:0;z-index:-1;background:var(--photo) center/cover no-repeat;
+  opacity:0;transition:opacity var(--t-card) var(--ease-out);
+}
+.bu:hover::before,.bu:focus-visible::before,.bu.is-hover::before{opacity:1}
+.bu:focus-visible{outline:none}
+.bu:focus-visible .bu__cta{text-decoration:underline;text-underline-offset:6px}
+.bu__logo{height:48px;width:auto;align-self:flex-start;display:block}
+.bu__body{display:flex;flex-direction:column;gap:32px}
+.bu__txt{margin:0;max-width:none;font:400 18px/1.5 var(--f-head);color:var(--on-card-2)}
+.bu__cta{display:inline-flex;align-items:center;gap:8px;padding:8px 0;font:400 18px/13px var(--f-ui);color:var(--on-card)}
+.bu__cta svg{width:11.3px;height:11.3px;flex:none}
+.bu--engineering{--c:#BA965C;--photo:url("bu/bu-engineering-hover.jpg")}
+.bu--advisors{--c:#0096DC;--photo:url("bu/bu-advisors-hover.jpg")}
+.bu--invest{--c:#268E6B;--photo:url("bu/bu-invest-hover.jpg")}
+.bu--group{--c:#005073;--photo:url("bu/bu-group-hover.jpg")}
+.bu--partners{--c:#5A7E92;--photo:url("bu/bu-partners-hover.jpg")}
+.slow .bu::before{transition-duration:1000ms}
+@media (prefers-reduced-motion:reduce){.bu::before{transition:none}}
+
+.row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+@media (max-width:1300px){.row{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:820px){.row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.row{grid-template-columns:minmax(0,1fr)}.bu{max-width:none}}
+
+/* comparação Default × Hover */
+.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:24px}
+.pair{display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+.pair__name{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.pair__cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pair__cards figure{margin:0;display:flex;flex-direction:column;gap:8px}
+.pair__cards figcaption{font:500 13px/1.4 var(--f-ui);color:var(--ink-2);text-align:center}
+.pair .bu{min-height:0;padding:12px;pointer-events:none;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 20px,100% 100%,0 100%)}
+.pair .bu__logo{height:24px}
+.pair .bu__body{gap:12px}
+.pair .bu__txt{font-size:10px}
+.pair .bu__cta{font-size:10px;line-height:8px;padding:4px 0;gap:4px}
+.pair .bu__cta svg{width:7px;height:7px}
+
+/* tabelas e notas */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font:400 14.5px/1.5 var(--f-ui);min-width:760px}
+th,td{text-align:left;vertical-align:top;padding:14px 18px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:rgba(47,45,40,.03)}
+td:first-child{font-weight:600;color:var(--ink)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;border:1px solid rgba(47,45,40,.2);vertical-align:-1px;margin-right:6px;background:var(--c)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:2px}
+.note{background:var(--surface);padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+.note p{font:400 14px/1.55 var(--f-ui)}
+.note__kind{font:600 11px/1.3 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.foot{font:400 13px/1.5 var(--f-ui);color:var(--ink-2);border-top:1px solid var(--rule);padding-top:20px}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 11.3 11.3"><path d="M0 5.657H11.303M11.303 5.657L5.647 11.314M11.303 5.657L5.647 0" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+</svg>
+
+<div class="wrap" id="root">
+  <header class="head">
+    <span class="eyebrow">Design System TSX · Componentes</span>
+    <h1>B.U. Card</h1>
+    <p>Card de unidade de negócio, usado nas seções Grupo TSX das páginas. Cada frente tem a sua cor <code>accent</code> de fundo, o logo em branco, uma frase e o link "Conheça". O card inteiro é o link.</p>
+  </header>
+
+  <section class="sec" aria-labelledby="s-live">
+    <div class="sec__head">
+      <span class="eyebrow">Interação · hover</span>
+      <h2 id="s-live">A foto da frente aparece por trás do texto</h2>
+      <p>No repouso, o card é sólido na cor <code>accent</code> da frente. No hover ou no foco, uma foto com o filtro da mesma cor aparece por cima do fundo em 250 ms, e some no mesmo tempo ao tirar o mouse. Logo, texto, link e o canto cortado não mudam. Passe o mouse ou use Tab.</p>
+      <div class="ctrls"><button class="ctrl" type="button" id="slow" aria-pressed="false">Câmera lenta (1 s)</button></div>
+    </div>
+    <div class="row" id="live"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="s-pairs">
+    <div class="sec__head">
+      <span class="eyebrow">Estados · Default e Hover</span>
+      <h2 id="s-pairs">As cinco frentes lado a lado</h2>
+    </div>
+    <div class="pairs" id="pairs"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="s-spec">
+    <div class="sec__head">
+      <span class="eyebrow">Especificação</span>
+      <h2 id="s-spec">Camadas e tokens</h2>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Camada</th><th>Default</th><th>Hover</th><th>Transição</th></tr></thead>
+        <tbody>
+          <tr><td>Fundo</td><td><code>accent</code> da frente: <span class="sw" style="--c:#BA965C"></span>Eng <span class="sw" style="--c:#0096DC"></span>Adv <span class="sw" style="--c:#268E6B"></span>Inv <span class="sw" style="--c:#005073"></span>Group <span class="sw" style="--c:#5A7E92"></span>Partners</td><td>Igual, coberto pela foto</td><td>—</td></tr>
+          <tr><td>Foto com filtro</td><td>Opacidade 0</td><td>Opacidade 100%. Foto + cor da frente em Linear Burn (Engineering usa degradê #80612E → #4B391B)</td><td>opacity · 250 ms · cubic-bezier(.2,0,0,1)</td></tr>
+          <tr><td>Logo</td><td>Versão branca, 48 px de altura</td><td>Igual</td><td>Sem mudança</td></tr>
+          <tr><td>Frase</td><td><code>text-paragraph inverse</code> #E6E6E5 95% · Paragraph</td><td>Igual</td><td>Sem mudança</td></tr>
+          <tr><td>Link "Conheça"</td><td><code>text-heading inverse</code> #FFFFFF · Button Label · Ghost</td><td>Igual</td><td>Sem mudança</td></tr>
+          <tr><td>Canto cortado</td><td>Triângulo de 35 × 39 px no canto superior direito</td><td>Igual</td><td>Sem mudança</td></tr>
+          <tr><td>Dimensões</td><td colspan="2">322 × 394 · padding 24 · raio 4 · frase e link com 32 px entre si</td><td>Sem mudança</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s-notes">
+    <div class="sec__head">
+      <span class="eyebrow">Notas</span>
+      <h2 id="s-notes">Diferenças entre o código e o Figma</h2>
+    </div>
+    <div class="notes">
+      <div class="note"><span class="note__kind">Variantes</span><h3>Nomes de frente trocados</h3><p>A variante Frente=Group mostra o card da Partners, e a Frente=Default mostra o do Group. No código, cada card usa o nome da frente que aparece nele.</p></div>
+      <div class="note"><span class="note__kind">Motion</span><h3>Só o Engineering anima no Figma</h3><p>O Engineering troca para o Hover com Smart Animate de 300 ms; as outras frentes trocam sem animação. No código, todas usam 250 ms, abaixo do limite de 300 ms.</p></div>
+      <div class="note"><span class="note__kind">Conteúdo</span><h3>Partners repete a frase do Group</h3><p>Os dois cards dizem "Estruturação de oportunidades de alta complexidade e governança de projetos." A frase da Partners precisa ser própria.</p></div>
+      <div class="note"><span class="note__kind">Link</span><h3>Ghost dentro do card</h3><p>O link "Conheça" é um Button TSX Ghost com o modo Partners preso. Se ele ganhasse o hover próprio do Ghost Light (texto em <code>accent</code>), sumiria sobre o fundo da mesma cor. No código, o card inteiro é o link e o Ghost não tem hover separado.</p></div>
+    </div>
+  </section>
+
+  <p class="foot">Componente lido do component set "B.U. Card" (10000:60317) do arquivo [TSX] Website em 18/11/2026. Fotos e logos exportados do Figma.</p>
+</div>
+
+<script>
+(function(){
+  var CARDS=[
+    ['engineering','TSX Engineering','Gestão integrada de projetos de CapEx, do planejamento à implantação.','Conheça a Engineering'],
+    ['advisors','TSX Advisors','Redução de custos tributários e logísticos com assessoria estratégica.','Conheça a Advisors'],
+    ['invest','TSX Invest','Atração de investimentos e inteligência territorial para municípios e empresas.','Conheça a Invest'],
+    ['group','TSX Group','Estruturação de oportunidades de alta complexidade e governança de projetos.','Conheça o Group'],
+    ['partners','TSX Partners','Estruturação de oportunidades de alta complexidade e governança de projetos.','Conheça a Partners']
+  ];
+  function card(c,extra,tag){
+    tag=tag||'a';
+    return '<'+tag+' class="bu bu--'+c[0]+(extra||'')+'"'+(tag==='a'?' href="#s-live"':' aria-hidden="true"')+'>'
+      +'<img class="bu__logo" src="bu/logo-'+c[0]+'-white.svg" alt="'+(tag==='a'?c[1]:'')+'">'
+      +'<span class="bu__body"><span class="bu__txt">'+c[2]+'</span>'
+      +'<span class="bu__cta">'+c[3]+'<svg aria-hidden="true"><use href="#i-arrow"/></svg></span></span></'+tag+'>';
+  }
+  document.getElementById('live').innerHTML=CARDS.map(function(c){return card(c)}).join('');
+  document.getElementById('pairs').innerHTML=CARDS.map(function(c){
+    return '<div class="pair"><span class="pair__name">'+c[1]+'</span><div class="pair__cards">'
+      +'<figure>'+card(c,'','div')+'<figcaption>Default</figcaption></figure>'
+      +'<figure>'+card(c,' is-hover','div')+'<figcaption>Hover</figcaption></figure></div></div>';
+  }).join('');
+  document.getElementById('live').addEventListener('click',function(e){if(e.target.closest('a'))e.preventDefault()});
+  var slow=document.getElementById('slow');
+  slow.addEventListener('click',function(){var on=slow.getAttribute('aria-pressed')!=='true';slow.setAttribute('aria-pressed',on?'true':'false');document.getElementById('root').classList.toggle('slow',on)});
+})();
+</script>
+
+</body></html>

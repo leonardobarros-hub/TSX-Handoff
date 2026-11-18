@@ -1,0 +1,280 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Depoimentos TSX</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: folha da section "Confiado por líderes do mercado" (depoimentos) do design system TSX.
+   A section aparece em largura real (1440) num palco; abaixo, especificação e notas.
+   Visual único claro com o card em bg-inverse, como no Figma. */
+:root{
+  --bg:#F2F2F2;
+  --surface:#FFFFFF;
+  --ink:#2F2D28;                       /* text-heading */
+  --ink-2:#595753;                     /* text-paragraph */
+  --rule:#C6CED2;                      /* divider */
+  --inverse:#121E28;                   /* bg-inverse */
+  --on-inv:#FFFFFF;                    /* text-heading inverse */
+  --on-inv-2:rgba(230,230,229,.95);    /* text-paragraph inverse */
+  --logo-idle:#B7C4CB;                 /* cinza dos logos em Default (sem variável no Figma) */
+  --accent:#268E6B;                    /* a section é da TSX Invest */
+  --accent-alt:#274139;
+  --f-head:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-code:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  /* motion: saída 120 ms ease-in + entrada 180 ms ease-out = 300 ms no total */
+  --t-out:120ms; --t-in:180ms; --t-logo:150ms;
+  --ease-in:cubic-bezier(.4,0,1,1); --ease-out:cubic-bezier(.2,0,0,1);
+  --shift:12px;
+  color-scheme:light;
+}
+[data-front="engineering"]{--accent:#BA965C;--accent-alt:#4F432F}
+[data-front="advisors"]{--accent:#0096DC;--accent-alt:#27414E}
+[data-front="partners"]{--accent:#5A7E92;--accent-alt:#3C5462}
+[data-front="group"]{--accent:#005073;--accent-alt:#043449}
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--f-head);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 96px;display:flex;flex-direction:column;gap:72px}
+@media (min-width:720px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:600 14px/1.5 var(--f-ui);color:var(--ink)}
+.eyebrow::before{content:"";width:4px;height:18px;background:var(--accent)}
+h1,h2,h3{margin:0;font-family:var(--f-head);font-weight:500;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(36px,6vw,56px);line-height:1.15;letter-spacing:-.01em}
+.doc h2{font-size:28px;line-height:1.4}
+h3{font-size:17px;line-height:1.35}
+p{margin:0;color:var(--ink-2);max-width:72ch}
+code{font-family:var(--f-code);font-size:.86em;background:rgba(47,45,40,.06);padding:1px 5px;border-radius:2px;color:var(--ink)}
+.head,.sec__head{display:flex;flex-direction:column;gap:14px}
+.doc{display:flex;flex-direction:column;gap:28px}
+.fronts{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-top:8px}
+.fronts__label{font:600 14px/1.5 var(--f-ui)}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+.seg button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font:400 14px/1.2 var(--f-ui);color:var(--ink-2);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ctrls{display:flex;flex-wrap:wrap;gap:12px}
+.ctrl{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--rule);border-radius:2px;font:500 14px/1.2 var(--f-ui);color:var(--ink);background:var(--surface)}
+.ctrl:hover{border-color:var(--ink)}
+.ctrl[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ctrl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.stage{border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+
+/* ---------- Section de depoimentos ---------- */
+.tm{background:var(--bg);padding-block:112px;padding-inline:clamp(16px,4.5vw,64px)}
+.tm__in{max-width:1312px;margin:0 auto;display:flex;flex-direction:column;gap:32px;align-items:center}
+.tm__head{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.tm__eyebrow{display:inline-flex;align-items:center;gap:4px;font:600 14px/1.5 var(--f-ui);color:var(--ink);margin:0}
+.tm__eyebrow::before{content:"";width:2px;height:11px;background:var(--accent)}
+.tm__title{font:500 clamp(32px,4vw,48px)/1.3 var(--f-head);color:var(--ink);margin:0}
+.tm__body{width:100%;display:flex;flex-direction:column;gap:24px}
+
+/* abas de marca */
+.tm__tabs{display:flex;justify-content:center;flex-wrap:wrap}
+.tm__tab{all:unset;box-sizing:border-box;cursor:pointer;height:56px;padding:0 24px;display:flex;align-items:center;justify-content:center;
+  color:var(--logo-idle);transition:color var(--t-logo) var(--ease-out)}
+.tm__tab[aria-selected="true"]{color:var(--accent)}
+.tm__tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:2px}
+.tm__tab svg{display:block;height:auto}
+.tm__tab .mask{display:block;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+
+/* card */
+.tm__card{display:grid;grid-template-columns:minmax(0,669fr) minmax(0,587fr);gap:8px;padding:24px;border-radius:4px;background:var(--inverse);min-height:508px;align-items:center}
+.tm__text{padding:0 32px;display:flex;flex-direction:column;justify-content:space-between;gap:56px;min-height:317px}
+.tm__quote{margin:0;font:500 28px/1.4 var(--f-head);color:var(--on-inv);text-wrap:pretty}
+.tm__who{display:flex;flex-direction:column;gap:8px;font:400 18px/13px var(--f-ui)}
+.tm__name{color:var(--on-inv)}
+.tm__meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--on-inv-2)}
+.tm__photo{position:relative;height:460px;overflow:hidden;
+  /* canto inferior direito cortado: 81 × 84 px, como no Figma */
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 84px),calc(100% - 81px) 100%,0 100%)}
+.tm__photo img{width:100%;height:100%;object-fit:cover;display:block}
+.tm__ph{position:absolute;inset:0;display:grid;place-items:center;background:var(--accent-alt);color:var(--on-inv-2);font:500 14px/1.4 var(--f-ui);text-align:center;padding:24px}
+.ph{color:#FFD58A}
+@media (max-width:900px){
+  .tm__card{grid-template-columns:minmax(0,1fr);min-height:0}
+  .tm__photo{height:auto;aspect-ratio:587/460;order:-1}
+  .tm__text{padding:8px 8px 16px;min-height:0;gap:32px}
+  .tm__quote{font-size:22px}
+}
+
+/* tabelas e notas */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font:400 14.5px/1.5 var(--f-ui);min-width:760px}
+th,td{text-align:left;vertical-align:top;padding:14px 18px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:rgba(47,45,40,.03)}
+td:first-child{font-weight:600;color:var(--ink)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:2px}
+.note{background:var(--surface);padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+.note p{font:400 14px/1.55 var(--f-ui)}
+.note__kind{font:600 11px/1.3 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.foot{font:400 13px/1.5 var(--f-ui);color:var(--ink-2);border-top:1px solid var(--rule);padding-top:20px}
+</style>
+
+<div class="wrap" id="root" data-front="invest">
+  <header class="head">
+    <span class="eyebrow">Design System TSX · Sections</span>
+    <h1>Depoimentos</h1>
+    <p>Section "Confiado por líderes do mercado": logos dos clientes como abas e um card com o depoimento. O logo escolhido fica na cor <code>accent</code> da frente; os outros ficam cinza. Escolha a frente para ver a cor do estado ativo.</p>
+    <div class="fronts" role="group" aria-label="Frente">
+      <span class="fronts__label">Frente</span>
+      <div class="seg" id="fronts">
+        <button type="button" data-front="engineering" style="--c:#BA965C" aria-pressed="false"><i></i>Engineering</button>
+        <button type="button" data-front="advisors" style="--c:#0096DC" aria-pressed="false"><i></i>Advisors</button>
+        <button type="button" data-front="invest" style="--c:#268E6B" aria-pressed="true"><i></i>Invest</button>
+        <button type="button" data-front="partners" style="--c:#5A7E92" aria-pressed="false"><i></i>Partners</button>
+        <button type="button" data-front="group" style="--c:#005073" aria-pressed="false"><i></i>Group</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="doc" aria-labelledby="s-live">
+    <div class="sec__head">
+      <span class="eyebrow">Interação · troca de depoimento</span>
+      <h2 id="s-live">O depoimento desce e some, o novo sobe e aparece</h2>
+      <p>Clique em outro logo (ou use as setas do teclado com o foco nas abas). O logo novo vai para <code>accent</code> e o anterior volta ao cinza. A foto some e o texto some descendo 12 px em 120 ms; depois a foto nova aparece e o texto novo sobe 12 px até o lugar em 180 ms. São 300 ms no total. Só a Itaminas tem depoimento no Figma; as outras marcas mostram campos <span class="ph">[PLACEHOLDER]</span> até o conteúdo real chegar.</p>
+      <div class="ctrls"><button class="ctrl" type="button" id="slow" aria-pressed="false">Câmera lenta (4×)</button></div>
+    </div>
+    <div class="stage">
+      <section class="tm" aria-labelledby="tm-title">
+        <div class="tm__in">
+          <div class="tm__head">
+            <p class="tm__eyebrow">Experiência reconhecida</p>
+            <h2 class="tm__title" id="tm-title">Confiado por líderes do mercado</h2>
+          </div>
+          <div class="tm__body">
+            <div class="tm__tabs" role="tablist" aria-label="Clientes" id="tabs"></div>
+            <div class="tm__card" role="tabpanel" id="panel" aria-live="polite">
+              <div class="tm__text" id="text">
+                <p class="tm__quote" id="quote"></p>
+                <div class="tm__who"><span class="tm__name" id="name"></span><span class="tm__meta"><span id="role"></span><span aria-hidden="true">|</span><span id="place"></span></span></div>
+              </div>
+              <div class="tm__photo" id="photo"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="doc" aria-labelledby="s-spec">
+    <div class="sec__head">
+      <span class="eyebrow">Especificação</span>
+      <h2 id="s-spec">Estados e motion</h2>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Camada</th><th>Repouso / Default</th><th>Ativo / Troca</th><th>Tempo e curva</th></tr></thead>
+        <tbody>
+          <tr><td>Logo (aba)</td><td>Cinza #B7C4CB</td><td><code>accent</code> da frente (Invest #268E6B)</td><td>color · 150 ms · cubic-bezier(.2,0,0,1)</td></tr>
+          <tr><td>Foto · saída</td><td>Opacidade 100%</td><td>Opacidade 0</td><td>120 ms · ease-in (.4,0,1,1)</td></tr>
+          <tr><td>Texto · saída</td><td>Opacidade 100% · y 0</td><td>Opacidade 0 · desce 12 px</td><td>120 ms · ease-in, junto com a foto</td></tr>
+          <tr><td>Foto · entrada</td><td>Opacidade 0</td><td>Opacidade 100%</td><td>180 ms · cubic-bezier(.2,0,0,1), começa quando a saída termina</td></tr>
+          <tr><td>Texto · entrada</td><td>Opacidade 0 · 12 px abaixo</td><td>Opacidade 100% · sobe até y 0</td><td>180 ms · cubic-bezier(.2,0,0,1), junto com a foto</td></tr>
+          <tr><td>O que entra no texto</td><td colspan="3">Depoimento (H4, <code>text-heading inverse</code>), nome (Button Label, <code>text-heading inverse</code>), cargo e estado (Button Label, <code>text-paragraph inverse</code> 95%) se movem juntos, como um bloco</td></tr>
+          <tr><td>Cliques seguidos</td><td colspan="3">Um clique durante a troca interrompe a animação e vai direto para o depoimento novo, sem fila</td></tr>
+          <tr><td>Teclado</td><td colspan="3">Abas com <code>role="tab"</code>; setas esquerda/direita mudam de aba e ativam; Home e End vão para a primeira e a última</td></tr>
+          <tr><td>Movimento reduzido</td><td colspan="3"><code>prefers-reduced-motion</code>: troca instantânea, sem deslocamento</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="doc" aria-labelledby="s-notes">
+    <div class="sec__head">
+      <span class="eyebrow">Notas</span>
+      <h2 id="s-notes">Diferenças entre o código e o Figma</h2>
+    </div>
+    <div class="notes">
+      <div class="note"><span class="note__kind">Conteúdo</span><h3>Só um depoimento real</h3><p>O Figma tem apenas o depoimento ligado à Itaminas. Samarco, Mineração Vale Verde, AMG e OZ aparecem com <span class="ph">[PLACEHOLDER]</span> no texto, no nome, no cargo, no estado e na foto.</p></div>
+      <div class="note"><span class="note__kind">Cor</span><h3>Cinza dos logos sem variável</h3><p>Os logos em Default usam cinzas soltos (#B7C4CB, #89A1AF, #7792A0). O código usa um só, #B7C4CB. Vale criar uma variável, por exemplo <code>logo-idle</code>, para o estado Default.</p></div>
+      <div class="note"><span class="note__kind">Estados</span><h3>Sem variantes de aba no Figma</h3><p>Os logos são frames soltos; o ativo (Itaminas) está pintado com <code>accent</code> à mão. Um componente "Logo tab" com Default e Active deixaria a troca de cor ligada à variável.</p></div>
+      <div class="note"><span class="note__kind">Foto</span><h3>Canto cortado dentro da imagem</h3><p>O corte do canto inferior direito vem pintado de branco na própria foto. No código o corte é feito com <code>clip-path</code> (81 × 84 px), então vale para qualquer foto.</p></div>
+    </div>
+  </section>
+
+  <p class="foot">Section lida do frame 11713:39948 do arquivo [TSX] Website em 18/11/2026. Logos e foto exportados do Figma.</p>
+</div>
+
+<script>
+(function(){
+  var ITEMS=[
+    {id:'samarco',name:'Samarco',logo:'logo-samarco.svg',w:128,h:28,quote:null},
+    {id:'itaminas',name:'Itaminas',logo:'logo-itaminas.svg',w:106,h:32,
+      quote:'“A TSX Invest mapeou as opções de localização, conduziu as conversas com o governo estadual em um novo território. Em 14 meses, saímos da decisão para a fábrica operando.”',
+      person:'Alexandre Morretes',role:'Diretor de Expansão',place:'Minas Gerais',photo:'depoimentos/foto-alexandre-morretes.jpg'},
+    {id:'mvv',name:'Mineração Vale Verde',logo:'logo-mineracao-vale-verde.svg',w:82,h:32,quote:null},
+    {id:'amg',name:'AMG',logo:'logo-amg.svg',w:66,h:32,quote:null},
+    {id:'oz',name:'OZ Minerals',mask:'logo-oz-mask.png',w:69,h:32,quote:null}
+  ];
+  var root=document.getElementById('root'), tabs=document.getElementById('tabs');
+  var text=document.getElementById('text'), photo=document.getElementById('photo');
+  var q=document.getElementById('quote'), nm=document.getElementById('name'), rl=document.getElementById('role'), pl=document.getElementById('place');
+  var current=-1, token=0, running=[];
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  var SLOW=1;
+
+  /* abas: SVG embutido para os logos seguirem currentColor */
+  tabs.innerHTML=ITEMS.map(function(it,i){
+    return '<button type="button" class="tm__tab" role="tab" id="tab-'+it.id+'" aria-controls="panel" aria-selected="false" tabindex="-1" aria-label="'+it.name+'">'
+      +(it.mask?'<span class="mask" style="width:'+it.w+'px;height:'+it.h+'px;--m:url(depoimentos/'+it.mask+')"></span>':'<span class="logo" data-src="depoimentos/'+it.logo+'" style="display:block;width:'+it.w+'px;height:'+it.h+'px"></span>')
+      +'</button>';
+  }).join('');
+  tabs.querySelectorAll('.logo').forEach(function(el){
+    fetch(el.dataset.src).then(function(r){return r.text()}).then(function(svg){el.innerHTML=svg;var s=el.querySelector('svg');if(s){s.setAttribute('width','100%');s.setAttribute('height','100%');s.setAttribute('aria-hidden','true')}})
+      .catch(function(){el.innerHTML='<span style="font:600 13px var(--f-ui)">'+el.parentNode.getAttribute('aria-label')+'</span>'});
+  });
+
+  function fill(it){
+    var P='<span class="ph">[PLACEHOLDER: ';
+    q.innerHTML=it.quote?it.quote:P+'depoimento do cliente '+it.name+']</span>';
+    nm.innerHTML=it.person||P+'nome]</span>';
+    rl.innerHTML=it.role||P+'cargo]</span>';
+    pl.innerHTML=it.place||P+'estado]</span>';
+    photo.innerHTML=it.photo?'<img src="'+it.photo+'" alt="'+(it.person||'')+'">':'<div class="tm__ph"><span>[PLACEHOLDER: foto do depoente da '+it.name+']</span></div>';
+  }
+  function anim(el,frames,ms,ease){var a=el.animate(frames,{duration:ms*SLOW,easing:ease,fill:'both'});running.push(a);return a.finished.catch(function(){})}
+  function select(i,focus){
+    if(i===current)return;
+    var tabsEls=tabs.querySelectorAll('[role=tab]');
+    tabsEls.forEach(function(t,k){t.setAttribute('aria-selected',k===i?'true':'false');t.tabIndex=k===i?0:-1});
+    if(focus)tabsEls[i].focus();
+    var it=ITEMS[i], first=current<0; current=i;
+    running.forEach(function(a){a.cancel()}); running=[];
+    if(first||reduce.matches){fill(it);return}
+    var my=++token;
+    var OUT='cubic-bezier(.4,0,1,1)', IN='cubic-bezier(.2,0,0,1)';
+    Promise.all([
+      anim(photo,[{opacity:1},{opacity:0}],120,OUT),
+      anim(text,[{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(12px)'}],120,OUT)
+    ]).then(function(){
+      if(my!==token)return;
+      running.forEach(function(a){a.cancel()}); running=[];
+      fill(it);
+      anim(photo,[{opacity:0},{opacity:1}],180,IN);
+      anim(text,[{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],180,IN);
+    });
+  }
+  tabs.addEventListener('click',function(e){var b=e.target.closest('[role=tab]');if(b)select([].indexOf.call(tabs.children,b))});
+  tabs.addEventListener('keydown',function(e){
+    var n=ITEMS.length,i=current;
+    if(e.key==='ArrowRight')i=(current+1)%n;else if(e.key==='ArrowLeft')i=(current-1+n)%n;else if(e.key==='Home')i=0;else if(e.key==='End')i=n-1;else return;
+    e.preventDefault();select(i,true);
+  });
+  select(1);
+
+  /* frente e câmera lenta */
+  var seg=document.getElementById('fronts');
+  seg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;root.setAttribute('data-front',b.dataset.front);
+    seg.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')})});
+  var slow=document.getElementById('slow');
+  slow.addEventListener('click',function(){var on=slow.getAttribute('aria-pressed')!=='true';slow.setAttribute('aria-pressed',on?'true':'false');SLOW=on?4:1;
+    root.style.setProperty('--t-logo',on?'600ms':'150ms')});
+})();
+</script>
+
+</body></html>
