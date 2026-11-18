@@ -1,0 +1,532 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Button TSX</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: folha de componente do design system TSX — coluna única de 1120px,
+   cada seção = cabeçalho com Eyebrow + palco do componente + tabela de especificação.
+   Visual único (claro, fundo bg da marca), com palcos escuros para as variantes Light. */
+:root{
+  /* Collection · valores lidos do Figma (modo Engineering por padrão) */
+  --bg:#F2F2F2;
+  --surface:#FFFFFF;            /* postcard bg / text-button */
+  --ink:#2F2D28;                /* text-heading / bg-button-default */
+  --ink-2:#595753;              /* text-paragraph (base) */
+  --ink-2a:rgba(89,87,83,.8);   /* text-paragraph (80%) */
+  --rule:#C6CED2;               /* divider */
+  --inverse:#121E28;            /* bg-inverse */
+  --btn-light-hover:#DBDBDB;    /* bg-button-light-hover */
+  --accent:#BA965C;             /* accent · muda por frente */
+
+  --f-head:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-code:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  /* Motion do Button TSX */
+  --tb-dur:420ms;
+  --tb-ease:cubic-bezier(.65,0,.35,1);
+  --tb-fade:200ms;
+  color-scheme:light;
+}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--f-head);-webkit-font-smoothing:antialiased}
+*,*::before,*::after{box-sizing:border-box}
+
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 96px;display:flex;flex-direction:column;gap:72px}
+@media (min-width:720px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
+
+/* ---------- Chrome da página ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:600 14px/1.5 var(--f-ui);color:var(--ink)}
+.eyebrow::before{content:"";width:4px;height:18px;background:var(--accent);transition:background-color var(--tb-fade)}
+h1,h2,h3{margin:0;font-family:var(--f-head);font-weight:500;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(36px,6vw,56px);line-height:1.15;letter-spacing:-.01em}
+h2{font-size:28px;line-height:1.4}
+h3{font-size:20px;line-height:1.35}
+p{margin:0;color:var(--ink-2);max-width:64ch}
+code{font-family:var(--f-code);font-size:.86em;background:rgba(47,45,40,.06);padding:1px 5px;border-radius:2px;color:var(--ink)}
+
+.head{display:flex;flex-direction:column;gap:20px}
+.head__meta{display:flex;flex-wrap:wrap;gap:8px 24px;font:500 14px/1.5 var(--f-ui);color:var(--ink-2)}
+.head__meta b{font-weight:600;color:var(--ink)}
+
+.fronts{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-top:8px}
+.fronts__label{font:600 14px/1.5 var(--f-ui);color:var(--ink)}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+.seg button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font:400 14px/1.2 var(--f-ui);color:var(--ink-2);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.sec{display:flex;flex-direction:column;gap:28px}
+.sec__head{display:flex;flex-direction:column;gap:12px}
+
+/* ---------- Button TSX ---------- */
+.tb{
+  position:relative;isolation:isolate;
+  display:inline-flex;align-items:center;gap:8px;flex:none;
+  font:400 18px/1 var(--f-ui);white-space:nowrap;text-decoration:none;
+  border:0;background:none;color:inherit;cursor:pointer;
+  transition:background-color var(--tb-fade) ease,color var(--tb-fade) ease,border-color var(--tb-fade) ease;
+}
+.tb svg{display:block;flex:none;overflow:visible}
+.tb:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* Default e Light — a barra accent de 4px cresce até virar o fundo sólido */
+.tb--default,.tb--light{height:45px;padding:0 16px 0 20px;border-radius:2px;overflow:hidden}
+.tb--default{background:var(--ink);color:#fff}
+.tb--default::before,.tb--light::before{
+  content:"";position:absolute;inset:0;z-index:-1;background:var(--accent);
+  clip-path:inset(0 calc(100% - 4px) 0 0);
+  transition:clip-path var(--tb-dur) var(--tb-ease),background-color var(--tb-fade);
+}
+.tb--default:hover::before,.tb--default:focus-visible::before,.tb--default.is-hover::before,
+.tb--light:hover::before,.tb--light:focus-visible::before,.tb--light.is-hover::before{clip-path:inset(0 0 0 0)}
+
+/* Light — fundo branco e rótulo escuro; no hover o rótulo vira branco junto com a barra */
+.tb--light{background:var(--surface);color:var(--ink);transition:color var(--tb-dur) var(--tb-ease)}
+.tb--light:hover,.tb--light:focus-visible,.tb--light.is-hover{color:#fff}
+
+/* Icon Only */
+.tb--icon,.tb--icon-light{width:44px;height:44px;justify-content:center;border-radius:2px;border:1px solid transparent}
+.tb--icon{border-color:var(--ink);color:var(--ink)}
+.tb--icon-light{background:var(--surface);color:var(--ink)}
+.tb--icon:hover,.tb--icon:focus-visible,.tb--icon.is-hover,
+.tb--icon-light:hover,.tb--icon-light:focus-visible,.tb--icon-light.is-hover{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* Ghost (link de texto) */
+.tb--ghost,.tb--ghost-accent,.tb--ghost-light{padding:8px 0}
+.tb--ghost{color:var(--ink)}
+.tb--ghost:hover,.tb--ghost:focus-visible,.tb--ghost.is-hover{color:var(--accent)}
+.tb--ghost-accent{color:var(--accent)}
+.tb--ghost-accent:hover,.tb--ghost-accent:focus-visible,.tb--ghost-accent.is-hover{color:var(--ink-2a)}
+.tb--ghost-light{color:#fff}
+.tb--ghost-light:hover,.tb--ghost-light:focus-visible,.tb--ghost-light.is-hover{color:var(--accent)}
+
+/* Outlined (ação secundária, abre lista) */
+.tb--outlined{height:47px;padding:0 16px;border-radius:2px;border:1px solid var(--ink);color:var(--ink)}
+.tb--outlined:hover,.tb--outlined:focus-visible,.tb--outlined.is-hover{background:var(--btn-light-hover)}
+
+@media (prefers-reduced-motion:reduce){
+  .tb,.tb--default::before,.tb--light::before{transition:none}
+}
+
+/* ---------- Palco da interação ---------- */
+.stage{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:2px}
+.stage>*{background:var(--surface)}
+.stage__main{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:56px 24px;min-height:260px;position:relative}
+.stage__main .demo{--tb-dur-local:var(--tb-dur)}
+.stage__main.slow .tb--default::before,.stage__main.slow .tb--light::before,.stage__main.slow .tb--light{transition-duration:1800ms}
+.stage__demos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;max-width:640px;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.stage__demo{display:flex;flex-direction:column;align-items:center;gap:14px;padding:36px 16px 20px}
+.stage__demo--dark{background:var(--inverse)}
+.stage__demo span{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.stage__demo--dark span{color:rgba(255,255,255,.55)}
+@media (max-width:520px){.stage__demos{grid-template-columns:1fr}}
+.frames--dark,.frames--dark .frame{background:var(--inverse)}
+.frames--dark{border-top:1px solid rgba(255,255,255,.08)}
+.frames--dark .frame figcaption{color:rgba(255,255,255,.55)}
+.frame .tb--light{pointer-events:none;transition:none;color:color-mix(in srgb,#fff calc(var(--p) * 100%),var(--ink))}
+.frame .tb--light::before{transition:none;clip-path:inset(0 calc((100% - 4px) * (1 - var(--p))) 0 0)}
+.stage__hint{font:500 14px/1.5 var(--f-ui);color:var(--ink-2);text-align:center}
+.stage__ctrl{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.ctrl{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--rule);border-radius:2px;font:500 14px/1.2 var(--f-ui);color:var(--ink);background:var(--surface)}
+.ctrl:hover{border-color:var(--ink)}
+.ctrl[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ctrl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.frames{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--rule)}
+.frame{background:var(--surface);display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px 8px 18px}
+.frame .tb--default{pointer-events:none}
+.frame .tb--default::before{transition:none;clip-path:inset(0 calc((100% - 4px) * (1 - var(--p))) 0 0)}
+.frame figcaption{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);text-align:center;font-variant-numeric:tabular-nums}
+@media (max-width:760px){
+  .frames{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .frame:last-child{grid-column:1/-1}
+}
+
+/* curva de easing */
+.curve{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;padding:24px}
+@media (min-width:760px){.curve{grid-template-columns:220px minmax(0,1fr);align-items:center}}
+.curve svg{width:100%;max-width:220px;height:auto}
+.curve dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 20px;margin:0;font:400 15px/1.5 var(--f-ui)}
+.curve dt{color:var(--ink-2)}
+.curve dd{margin:0;color:var(--ink)}
+
+/* ---------- Tabelas ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font:400 15px/1.5 var(--f-ui);min-width:640px}
+th,td{text-align:left;vertical-align:top;padding:14px 18px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:rgba(47,45,40,.03)}
+td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;border:1px solid rgba(47,45,40,.2);vertical-align:-1px;margin-right:6px;background:var(--c)}
+
+/* ---------- Matriz de variantes ---------- */
+.matrix{display:flex;flex-direction:column;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+.mrow{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--rule)}
+.mrow:last-child{border-bottom:0}
+.mrow--head{background:rgba(47,45,40,.03)}
+.mrow--head>div{font:600 12px/1.4 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);padding:12px 20px}
+.minfo{padding:22px 20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.minfo h3{font-size:18px}
+.minfo p{font:400 14px/1.55 var(--f-ui)}
+.mchange{font:500 13px/1.5 var(--f-ui);color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.mchange span{color:var(--ink-2)}
+.mcell{display:flex;align-items:center;justify-content:center;padding:28px 16px;border-left:1px solid var(--rule);min-height:120px;position:relative}
+.mcell--dark{background:var(--inverse);border-left-color:rgba(255,255,255,.08)}
+.mcell__tag{position:absolute;top:10px;left:12px;font:600 11px/1.3 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);display:none}
+.mcell--dark .mcell__tag{color:rgba(255,255,255,.55)}
+@media (max-width:760px){
+  .mrow{grid-template-columns:1fr 1fr}
+  .mrow--head{display:none}
+  .minfo{grid-column:1/-1;border-bottom:1px solid var(--rule)}
+  .mcell{border-left:0;padding-top:40px}
+  .mcell+.mcell{border-left:1px solid var(--rule)}
+  .mcell__tag{display:block}
+}
+
+/* ---------- Código ---------- */
+.code{position:relative;background:var(--inverse);border-radius:2px;color:#E6E6E5}
+.code pre{margin:0;padding:24px;overflow-x:auto;font:400 13.5px/1.65 var(--f-code)}
+.code .k{color:#9FB3C2}.code .v{color:#E5DCCB}.code .c{color:#7E8A94}
+.code button{all:unset;cursor:pointer;position:absolute;top:12px;right:12px;font:500 13px/1 var(--f-ui);color:#fff;padding:8px 12px;border:1px solid rgba(255,255,255,.25);border-radius:2px;background:var(--inverse)}
+.code button:hover{border-color:#fff}
+.code button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- Notas ---------- */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:2px}
+.note{background:var(--surface);padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+.note h3{font-size:17px}
+.note p{font:400 14px/1.55 var(--f-ui)}
+.note__kind{font:600 11px/1.3 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+
+.foot{font:400 13px/1.5 var(--f-ui);color:var(--ink-2);border-top:1px solid var(--rule);padding-top:20px}
+</style>
+
+<!-- Ícones (paths lidos do Figma) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 11.3 11.3"><path d="M0 5.657H11.303M11.303 5.657L5.647 11.314M11.303 5.657L5.647 0" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  <symbol id="i-arrow-12" viewBox="0 0 12 12"><path d="M0 6H12M12 6L5.995 12M12 6L5.995 0" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 12 12"><path d="M2 4L6 8L10 4" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+</svg>
+
+<main class="wrap">
+
+  <!-- Cabeçalho -->
+  <header class="head">
+    <span class="eyebrow">Design System TSX · Componentes</span>
+    <h1>Button TSX</h1>
+    <p>Botão único das cinco frentes do Grupo TSX. Oito tipos, dois estados (Default e Hover). A cor da barra lateral, do hover do Default e do Light e dos links vem do <code>accent</code>, que muda com a frente.</p>
+    <div class="head__meta">
+      <span><b>Figma</b> [TSX] Website · ↳ Componentes · node 9192:86644</span>
+      <span><b>Fonte do rótulo</b> Button Label · Plus Jakarta Sans 18/100%</span>
+      <span><b>Raio</b> 2 px</span>
+    </div>
+    <div class="fronts" role="group" aria-label="Frente (modo da coleção)">
+      <span class="fronts__label">Frente</span>
+      <div class="seg" id="fronts">
+        <button type="button" data-accent="#BA965C" style="--c:#BA965C" aria-pressed="true"><i></i>Engineering</button>
+        <button type="button" data-accent="#0096DC" style="--c:#0096DC" aria-pressed="false"><i></i>Advisors</button>
+        <button type="button" data-accent="#268E6B" style="--c:#268E6B" aria-pressed="false"><i></i>Invest</button>
+        <button type="button" data-accent="#5A7E92" style="--c:#5A7E92" aria-pressed="false"><i></i>Partners</button>
+        <button type="button" data-accent="#005073" style="--c:#005073" aria-pressed="false"><i></i>Group</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interação Default -->
+  <section class="sec" aria-labelledby="s-hover">
+    <div class="sec__head">
+      <span class="eyebrow">Interação · Type Default e Light</span>
+      <h2 id="s-hover">A barra lateral vira o fundo</h2>
+      <p>No repouso, os dois tipos mostram uma barra <code>accent</code> de 4 px na borda esquerda: o Default sobre <code>bg-button-default</code>, o Light sobre branco. No hover, essa barra cresce da esquerda para a direita até cobrir o botão inteiro e se torna o fundo sólido do estado Hover. Ao sair, ela recolhe de volta para a esquerda no mesmo tempo. No Default, rótulo e seta continuam brancos. No Light, eles passam de <code>text-heading</code> para branco no mesmo ritmo da barra, e os dois tipos terminam no mesmo estado Hover.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage__main" id="stage">
+        <div class="stage__demos">
+          <div class="stage__demo"><a class="tb tb--default demo" href="#s-hover">Fale com a TSX<svg width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg></a><span>Default</span></div>
+          <div class="stage__demo stage__demo--dark"><a class="tb tb--light demo" href="#s-hover">Fale com a TSX<svg width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg></a><span>Light</span></div>
+        </div>
+        <p class="stage__hint">Passe o mouse ou use Tab para focar o botão.</p>
+        <div class="stage__ctrl">
+          <button class="ctrl" type="button" id="play">Reproduzir hover</button>
+          <button class="ctrl" type="button" id="slow" aria-pressed="false">Câmera lenta (1,8 s)</button>
+        </div>
+      </div>
+
+      <div class="frames" aria-label="Quadros da transição">
+        <figure class="frame" style="margin:0"><span class="tb tb--default" style="--p:0" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>Repouso<br>4 px</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--default" style="--p:.25" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>25%</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--default" style="--p:.5" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>50%</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--default" style="--p:.75" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>75%</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--default" style="--p:1" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>Hover<br>100%</figcaption></figure>
+      </div>
+
+      <div class="frames frames--dark" aria-label="Quadros da transição do Light">
+        <figure class="frame" style="margin:0"><span class="tb tb--light" style="--p:0" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>Repouso<br>4 px</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--light" style="--p:.25" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>25%</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--light" style="--p:.5" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>50%</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--light" style="--p:.75" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>75%</figcaption></figure>
+        <figure class="frame" style="margin:0"><span class="tb tb--light" style="--p:1" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span><figcaption>Hover<br>100%</figcaption></figure>
+      </div>
+
+      <div class="curve">
+        <svg viewBox="-14 -14 148 148" role="img" aria-label="Curva de easing cubic-bezier 0.65, 0, 0.35, 1">
+          <rect x="0" y="0" width="120" height="120" fill="none" stroke="#C6CED2"/>
+          <line x1="0" y1="60" x2="120" y2="60" stroke="#C6CED2" stroke-dasharray="2 3"/>
+          <line x1="60" y1="0" x2="60" y2="120" stroke="#C6CED2" stroke-dasharray="2 3"/>
+          <path d="M0 120 C78 120 42 0 120 0" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+          <circle cx="0" cy="120" r="3.5" fill="#2F2D28"/><circle cx="120" cy="0" r="3.5" fill="#2F2D28"/>
+          <text x="0" y="134" font-size="9" fill="#595753" font-family="Plus Jakarta Sans,sans-serif">0 ms</text>
+          <text x="120" y="134" font-size="9" fill="#595753" text-anchor="end" font-family="Plus Jakarta Sans,sans-serif">420 ms</text>
+          <text x="-4" y="-5" font-size="9" fill="#595753" font-family="Plus Jakarta Sans,sans-serif">100%</text>
+        </svg>
+        <dl>
+          <dt>Propriedade</dt><dd>Largura da camada <code>accent</code> (4 px → 100%), feita com <code>clip-path</code> para não recalcular layout</dd>
+          <dt>Duração</dt><dd>420 ms na entrada e na saída</dd>
+          <dt>Curva</dt><dd><code>cubic-bezier(.65, 0, .35, 1)</code>: começa devagar, acelera no meio e assenta no fim</dd>
+          <dt>Origem</dt><dd>Borda esquerda. A barra nunca some: no repouso ela continua com 4 px</dd>
+          <dt>Movimento reduzido</dt><dd>Com <code>prefers-reduced-motion</code>, a troca é instantânea</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Camada</th><th>Default</th><th>Hover</th><th>Transição</th></tr></thead>
+        <tbody>
+          <tr><td>Barra / fundo accent</td><td><span class="sw" style="--c:var(--accent)"></span><code>accent</code> · 4 px à esquerda</td><td><span class="sw" style="--c:var(--accent)"></span><code>accent</code> · 100% da largura</td><td>clip-path · 420 ms · cubic-bezier(.65,0,.35,1)</td></tr>
+          <tr><td>Fundo base</td><td><span class="sw" style="--c:#2F2D28"></span><code>bg-button-default</code> #2F2D28</td><td>Coberto pela camada accent</td><td>—</td></tr>
+          <tr><td>Fundo base · Light</td><td><span class="sw" style="--c:#fff"></span><code>text-button</code> #FFFFFF</td><td>Coberto pela camada accent</td><td>—</td></tr>
+          <tr><td>Rótulo e seta · Default</td><td><span class="sw" style="--c:#fff"></span><code>text-button</code> #FFFFFF</td><td><span class="sw" style="--c:#fff"></span><code>text-button</code> #FFFFFF</td><td>Sem mudança</td></tr>
+          <tr><td>Rótulo e seta · Light</td><td><span class="sw" style="--c:#2F2D28"></span><code>text-heading</code> #2F2D28</td><td><span class="sw" style="--c:#fff"></span><code>text-button</code> #FFFFFF</td><td>color · 420 ms · mesma curva</td></tr>
+          <tr><td>Dimensões</td><td colspan="2">Altura 45 · padding 16 (+4 da barra à esquerda) · gap 8 · seta 11,3 px, traço 1 px</td><td>Sem mudança</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Variantes -->
+  <section class="sec" aria-labelledby="s-var">
+    <div class="sec__head">
+      <span class="eyebrow">Variantes · Type × State</span>
+      <h2 id="s-var">Os oito tipos</h2>
+      <p>A coluna Default é interativa: passe o mouse para ver a transição. A coluna Hover mostra o estado final fixo. Os tipos Light ficam sobre <code>bg-inverse</code>, que é onde são usados.</p>
+    </div>
+
+    <div class="matrix">
+      <div class="mrow mrow--head"><div>Tipo e uso</div><div style="border-left:1px solid var(--rule)">Default (interativo)</div><div style="border-left:1px solid var(--rule)">Hover</div></div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Default</h3><p>CTA principal sobre fundo claro. Pode ocupar a largura toda.</p>
+          <div class="mchange">Barra accent cresce até virar fundo<span>bg-button-default → accent · 420 ms</span></div></div>
+        <div class="mcell"><span class="mcell__tag">Default</span><a class="tb tb--default" href="#s-var">Label<svg width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+        <div class="mcell"><span class="mcell__tag">Hover</span><span class="tb tb--default is-hover" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span></div>
+      </div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Light</h3><p>CTA principal sobre fundo escuro ou foto. Mesma interação do Default.</p>
+          <div class="mchange">Barra accent cresce até virar fundo; rótulo fica branco<span>text-button → accent · text-heading → text-button · 420 ms</span></div></div>
+        <div class="mcell mcell--dark"><span class="mcell__tag">Default</span><a class="tb tb--light" href="#s-var">Label<svg width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+        <div class="mcell mcell--dark"><span class="mcell__tag">Hover</span><span class="tb tb--light is-hover" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span></div>
+      </div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Icon Only</h3><p>Setas de carrossel sobre fundo claro. 44 × 44, borda 1 px.</p>
+          <div class="mchange">Preenche e inverte a seta<span>transparente → bg-button-default · seta → text-button</span></div></div>
+        <div class="mcell"><span class="mcell__tag">Default</span><button class="tb tb--icon" type="button" aria-label="Próximo"><svg width="12" height="12" aria-hidden="true"><use href="#i-arrow-12"/></svg></button></div>
+        <div class="mcell"><span class="mcell__tag">Hover</span><span class="tb tb--icon is-hover" aria-hidden="true"><svg width="12" height="12"><use href="#i-arrow-12"/></svg></span></div>
+      </div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Icon Only light</h3><p>Seta de carrossel sobre foto ou fundo escuro. Fundo branco, sem borda.</p>
+          <div class="mchange">Preenche e inverte a seta<span>postcard bg → bg-button-default · seta → text-button</span></div></div>
+        <div class="mcell mcell--dark"><span class="mcell__tag">Default</span><button class="tb tb--icon-light" type="button" aria-label="Próximo"><svg width="12" height="12" aria-hidden="true"><use href="#i-arrow-12"/></svg></button></div>
+        <div class="mcell mcell--dark"><span class="mcell__tag">Hover</span><span class="tb tb--icon-light is-hover" aria-hidden="true"><svg width="12" height="12"><use href="#i-arrow-12"/></svg></span></div>
+      </div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Ghost</h3><p>Link de texto, como "Ler matéria". Sem fundo, padding vertical 8.</p>
+          <div class="mchange">Rótulo e seta ganham o accent<span>text-heading → accent · 200 ms</span></div></div>
+        <div class="mcell"><span class="mcell__tag">Default</span><a class="tb tb--ghost" href="#s-var">Label<svg width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+        <div class="mcell"><span class="mcell__tag">Hover</span><span class="tb tb--ghost is-hover" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span></div>
+      </div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Ghost Acent</h3><p>Link de texto em destaque sobre fundo claro.</p>
+          <div class="mchange">Apaga para o tom de parágrafo<span>accent → text-paragraph 80% · 200 ms</span></div></div>
+        <div class="mcell"><span class="mcell__tag">Default</span><a class="tb tb--ghost-accent" href="#s-var">Label<svg width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+        <div class="mcell"><span class="mcell__tag">Hover</span><span class="tb tb--ghost-accent is-hover" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span></div>
+      </div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Ghost Light</h3><p>Link de texto sobre fundo escuro.</p>
+          <div class="mchange">Branco para accent<span>text-heading inverse → accent · 200 ms</span></div></div>
+        <div class="mcell mcell--dark"><span class="mcell__tag">Default</span><a class="tb tb--ghost-light" href="#s-var">Label<svg width="11.3" height="11.3" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+        <div class="mcell mcell--dark"><span class="mcell__tag">Hover</span><span class="tb tb--ghost-light is-hover" aria-hidden="true">Label<svg width="11.3" height="11.3"><use href="#i-arrow"/></svg></span></div>
+      </div>
+
+      <div class="mrow">
+        <div class="minfo"><h3>Outlined</h3><p>Ação secundária que abre uma lista (chevron). Borda 1 px, altura 47.</p>
+          <div class="mchange">Ganha fundo cinza<span>transparente → bg-button-light-hover #DBDBDB · 200 ms</span></div></div>
+        <div class="mcell"><span class="mcell__tag">Default</span><button class="tb tb--outlined" type="button">Label<svg width="12" height="12" aria-hidden="true"><use href="#i-chev"/></svg></button></div>
+        <div class="mcell"><span class="mcell__tag">Hover</span><span class="tb tb--outlined is-hover" aria-hidden="true">Label<svg width="12" height="12"><use href="#i-chev"/></svg></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tokens -->
+  <section class="sec" aria-labelledby="s-tok">
+    <div class="sec__head">
+      <span class="eyebrow">Tokens</span>
+      <h2 id="s-tok">Variáveis usadas</h2>
+      <p>Todas da coleção <code>Collection</code>. Só o <code>accent</code> muda entre as frentes.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Variável</th><th>Valor</th><th>Onde entra</th></tr></thead>
+        <tbody>
+          <tr><td>accent</td><td><span class="sw" style="--c:#BA965C"></span>#BA965C <span class="sw" style="--c:#0096DC;margin-left:6px"></span>#0096DC <span class="sw" style="--c:#268E6B;margin-left:6px"></span>#268E6B <span class="sw" style="--c:#5A7E92;margin-left:6px"></span>#5A7E92 <span class="sw" style="--c:#005073;margin-left:6px"></span>#005073</td><td>Barra e hover do Default e do Light, Ghost Acent, hover dos Ghost</td></tr>
+          <tr><td>bg-button-default</td><td><span class="sw" style="--c:#2F2D28"></span>#2F2D28</td><td>Fundo do Default; borda e hover dos Icon Only</td></tr>
+          <tr><td>text-button</td><td><span class="sw" style="--c:#FFFFFF"></span>#FFFFFF</td><td>Rótulo do Default; fundo do Light e rótulo dele no hover; seta no hover dos Icon Only</td></tr>
+          <tr><td>bg-button-light-hover</td><td><span class="sw" style="--c:#DBDBDB"></span>#DBDBDB</td><td>Hover do Outlined</td></tr>
+          <tr><td>text-heading</td><td><span class="sw" style="--c:#2F2D28"></span>#2F2D28</td><td>Rótulo do Light (repouso), Ghost e Outlined</td></tr>
+          <tr><td>text-heading inverse</td><td><span class="sw" style="--c:#FFFFFF"></span>#FFFFFF</td><td>Ghost Light</td></tr>
+          <tr><td>text-paragraph</td><td><span class="sw" style="--c:rgba(89,87,83,.8)"></span>#595753 · 80%</td><td>Hover do Ghost Acent</td></tr>
+          <tr><td>postcard bg</td><td><span class="sw" style="--c:#FFFFFF"></span>#FFFFFF</td><td>Fundo do Icon Only light</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CSS -->
+  <section class="sec" aria-labelledby="s-css">
+    <div class="sec__head">
+      <span class="eyebrow">Implementação</span>
+      <h2 id="s-css">CSS do Default e do Light</h2>
+      <p>A barra é um <code>::before</code> do tamanho do botão, recortado com <code>clip-path</code> para mostrar só 4 px. No hover o recorte abre por inteiro. Como só <code>clip-path</code> anima, a transição roda na GPU e o texto não se move.</p>
+    </div>
+    <div class="code">
+      <button type="button" id="copy">Copiar</button>
+<pre id="css-src"><span class="k">.tb--default, .tb--light</span> {
+  <span class="c">/* tokens */</span>
+  --tb-dur: <span class="v">420ms</span>;
+  --tb-ease: <span class="v">cubic-bezier(.65, 0, .35, 1)</span>;
+
+  position: relative;
+  isolation: isolate;          <span class="c">/* a barra fica entre o fundo e o texto */</span>
+  display: inline-flex;
+  align-items: center;
+  gap: <span class="v">8px</span>;
+  height: <span class="v">45px</span>;
+  padding: <span class="v">0 16px 0 20px</span>;     <span class="c">/* 16 + 4 da barra */</span>
+  border-radius: <span class="v">2px</span>;
+  overflow: hidden;
+  font: <span class="v">400 18px/1 "Plus Jakarta Sans", sans-serif</span>;
+}
+
+<span class="k">.tb--default</span> {
+  background: <span class="v">var(--bg-button-default)</span>;
+  color: <span class="v">var(--text-button)</span>;
+}
+
+<span class="k">.tb--light</span> {
+  background: <span class="v">var(--text-button)</span>;
+  color: <span class="v">var(--text-heading)</span>;
+  transition: color <span class="v">var(--tb-dur) var(--tb-ease)</span>;
+}
+<span class="k">.tb--light:hover,
+.tb--light:focus-visible</span> {
+  color: <span class="v">var(--text-button)</span>;        <span class="c">/* rótulo e seta (currentColor) */</span>
+}
+
+<span class="k">.tb--default::before,
+.tb--light::before</span> {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: <span class="v">var(--accent)</span>;
+  clip-path: <span class="v">inset(0 calc(100% - 4px) 0 0)</span>;   <span class="c">/* repouso: 4px */</span>
+  transition: clip-path <span class="v">var(--tb-dur) var(--tb-ease)</span>;
+}
+
+<span class="k">.tb--default:hover::before,
+.tb--default:focus-visible::before,
+.tb--light:hover::before,
+.tb--light:focus-visible::before</span> {
+  clip-path: <span class="v">inset(0 0 0 0)</span>;                  <span class="c">/* hover: 100% */</span>
+}
+
+<span class="k">@media (prefers-reduced-motion: reduce)</span> {
+  <span class="k">.tb--light,
+  .tb--default::before,
+  .tb--light::before</span> { transition: none; }
+}</pre>
+    </div>
+  </section>
+
+  <!-- Notas -->
+  <section class="sec" aria-labelledby="s-notes">
+    <div class="sec__head">
+      <span class="eyebrow">Notas</span>
+      <h2 id="s-notes">Pontos para revisar no Figma</h2>
+    </div>
+    <div class="notes">
+      <div class="note"><span class="note__kind">Motion</span><h3>O protótipo troca de estado sem transição</h3><p>As interações "On hover → Change to" do component set não têm animação definida. Os 420 ms e a curva desta página são a proposta para o código; vale registrar no Figma (Smart Animate ou anotação) para dev e design ficarem iguais.</p></div>
+      <div class="note"><span class="note__kind">Variante</span><h3>Hover do Light no Figma está diferente</h3><p>No Figma, "Type=Light, State=Hover" ainda tem fundo <code>bg</code> #F2F2F2, barra de 4 px e rótulo escuro. Nesta folha ele passou a ter fundo <code>accent</code> e rótulo e seta em <code>text-button</code>, igual ao hover do Default. Atualize a variante no Figma para os dois baterem.</p></div>
+      <div class="note"><span class="note__kind">Nome</span><h3>Underline passa a se chamar Ghost</h3><p>Nesta folha, os tipos Underline, Underline Acent e Underline Light viraram Ghost, Ghost Acent e Ghost Light. O nome antigo não fazia sentido porque eles não têm sublinhado (traço de 0 px). No Figma as variantes ainda usam "Underline".</p></div>
+      <div class="note"><span class="note__kind">Variante</span><h3>Nome duplicado no Icon Only light</h3><p>O hover do Icon Only light se chama "Type=Icon Only, State=Hover", igual ao do Icon Only. Isso quebra as propriedades do set. Renomear para "Type=Icon Only light, State=Hover".</p></div>
+      <div class="note"><span class="note__kind">Contraste</span><h3>Accent do Group sobre fundo escuro</h3><p>No modo Group, o accent #005073 fica com contraste baixo sobre <code>bg-inverse</code>. Afeta a barra do Light em repouso e o hover do Ghost Light. Troque a frente para Group no topo para ver.</p></div>
+      <div class="note"><span class="note__kind">Token</span><h3><code>bg-button-hover</code> e <code>stroke-button</code> sem uso</h3><p>As variáveis #004666 e #0075A8 existem, mas nenhuma variante do Button TSX usa mais. O <code>.btn</code> atual do index.html ainda usa o hover azul antigo.</p></div>
+    </div>
+  </section>
+
+  <p class="foot">Valores lidos do component set "Button TSX" (9192:86644) no arquivo [TSX] Website em 18/11/2026.</p>
+</main>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var seg=document.getElementById('fronts');
+  function setFront(btn){
+    seg.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b===btn?'true':'false')});
+    root.style.setProperty('--accent',btn.dataset.accent);
+    try{localStorage.setItem('tsx-btn-front',btn.dataset.accent)}catch(e){}
+  }
+  seg.addEventListener('click',function(e){var b=e.target.closest('button');if(b)setFront(b)});
+  try{var saved=localStorage.getItem('tsx-btn-front');if(saved){var b=seg.querySelector('[data-accent="'+saved+'"]');if(b)setFront(b)}}catch(e){}
+
+  var demos=document.querySelectorAll('.demo'),stage=document.getElementById('stage');
+  demos.forEach(function(d){d.addEventListener('click',function(e){e.preventDefault()})});
+  var slow=document.getElementById('slow');
+  slow.addEventListener('click',function(){
+    var on=slow.getAttribute('aria-pressed')!=='true';
+    slow.setAttribute('aria-pressed',on?'true':'false');
+    stage.classList.toggle('slow',on);
+  });
+  var timer;
+  document.getElementById('play').addEventListener('click',function(){
+    clearTimeout(timer);
+    var d=stage.classList.contains('slow')?1800:420;
+    demos.forEach(function(el){el.classList.remove('is-hover')});void stage.offsetWidth;
+    demos.forEach(function(el){el.classList.add('is-hover')});
+    timer=setTimeout(function(){demos.forEach(function(el){el.classList.remove('is-hover')})},d+900);
+  });
+
+  document.querySelectorAll('.matrix a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault()})});
+
+  var copy=document.getElementById('copy');
+  copy.addEventListener('click',function(){
+    var txt=document.getElementById('css-src').innerText;
+    function done(){copy.textContent='Copiado';setTimeout(function(){copy.textContent='Copiar'},1600)}
+    function fallback(){var r=document.createRange();r.selectNodeContents(document.getElementById('css-src'));var s=getSelection();s.removeAllRanges();s.addRange(r);copy.textContent='Selecionado'}
+    try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(e){fallback()}
+  });
+})();
+</script>
+
+</body></html>
